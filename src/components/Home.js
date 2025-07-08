@@ -213,23 +213,22 @@ export default function Home() {
         <Typography variant="h6" sx={{ mb: 4, color: '#555', maxWidth: 700, mx: 'auto' }}>
           Join us for inspiring events that build community and celebrate recovery milestones.
         </Typography>
-        <Grid container spacing={4} alignItems="stretch" justifyContent="center">
+        <Grid container spacing={4} alignItems="stretch" justifyContent="center" sx={{ maxWidth: 1020, mx: 'auto', flexWrap: 'wrap' }}>
           {events.map((event) => (
-            <Grid item xs={12} sm={6} md={6} key={event.title}>
+            <Grid item xs={12} sm={6} md={6} key={event.title} sx={{ display: 'flex', justifyContent: 'center' }}>
               <Box sx={{
                 background: '#e6fcf5',
                 borderRadius: 3,
                 boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
                 p: 4,
-                minHeight: 320,
-                maxHeight: 320,
+                height: 320,
+                width: 480,
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                height: '100%',
                 overflow: 'hidden',
               }}>
-                <Box sx={{ flex: 1, overflow: 'hidden' }}>
+                <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
                     <EventIcon sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
                     <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
@@ -258,11 +257,7 @@ export default function Home() {
                       color: '#444',
                       mb: 2,
                       fontSize: 16,
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis',
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
+                      overflow: 'auto',
                     }}
                   >
                     {event.desc}
