@@ -23,7 +23,7 @@ const navLinks = [
   { label: 'About', to: '/about' },
   { label: 'Services', to: '/services' },
   { label: 'Events', to: '#' },
-  { label: 'Contact', to: '#' },
+  { label: 'Contact', to: '/contact' },
 ];
 
 // Colors from screenshot
