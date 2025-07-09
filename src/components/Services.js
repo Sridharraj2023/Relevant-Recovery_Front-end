@@ -102,73 +102,77 @@ export default function Services() {
         <Grid
           key={service.title}
           container
-          spacing={4}
-          alignItems="center"
+          spacing={{ xs: 2, md: 0 }}
+          alignItems="stretch"
           justifyContent="center"
           sx={{
-            py: { xs: 6, md: 8 },
-            px: { xs: 2, md: 8 },
+            py: { xs: 5, md: 8 },
+            px: { xs: 1, md: 8 },
             background: idx % 2 === 0 ? '#fff' : lightGradient,
             opacity: service.faded ? 0.5 : 1,
           }}
         >
-          <Grid item xs={12} md={6} order={{ xs: 2, md: service.reverse ? 2 : 1 }}>
-            <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
-              {service.icon}
-              <Box>
-                <Typography variant="h5" sx={{ fontWeight: 800, color: service.faded ? '#b2d8d8' : '#181f29', display: 'flex', alignItems: 'center' }}>
-                  {service.title}
-                  {service.comingSoon && (
-                    <Chip label="Coming Soon" size="small" sx={{ ml: 2, background: '#eafaf4', color: '#089e8e', fontWeight: 700 }} />
-                  )}
-                </Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 700, color: service.faded ? '#b2d8d8' : '#181f29', mb: 1 }}>
-                  {service.subtitle}
-                </Typography>
-                <Typography variant="body1" sx={{ color: '#444', fontSize: 18, mb: 2 }}>
-                  {service.description}
-                </Typography>
-                <Typography variant="subtitle2" sx={{ fontWeight: 700, color: service.faded ? '#b2d8d8' : '#089e8e', mb: 1 }}>
-                  What We Offer:
-                </Typography>
-                <List dense>
-                  {service.offers.map((offer) => (
-                    <ListItem key={offer} sx={{ py: 0 }}>
-                      <ListItemIcon>
-                        <CheckCircleIcon sx={{ color: service.faded ? '#b2d8d8' : '#089e8e', fontSize: 22 }} />
-                      </ListItemIcon>
-                      <ListItemText primary={offer} primaryTypographyProps={{ fontSize: 16, color: '#444' }} />
-                    </ListItem>
-                  ))}
-                </List>
-                <Button
-                  variant="contained"
-                  sx={{
-                    mt: 2,
-                    borderRadius: 999,
-                    fontWeight: 700,
-                    px: 4,
-                    py: 1.2,
-                    fontSize: 16,
-                    backgroundColor: service.comingSoon ? '#eafaf4' : '#089e8e',
-                    color: service.comingSoon ? '#089e8e' : '#fff',
-                    textTransform: 'none',
-                    boxShadow: 'none',
-                    '&:hover': {
-                      backgroundColor: service.comingSoon ? '#d0f0e8' : '#067e71',
-                      color: service.comingSoon ? '#089e8e' : '#fff',
-                      boxShadow: 'none',
-                    },
-                  }}
-                  disabled={!!service.comingSoon}
-                >
-                  {service.button}
-                </Button>
+          {/* Content Column */}
+          <Grid item xs={12} md={6} order={{ xs: 2, md: service.reverse ? 2 : 1 }} sx={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', pr: { md: service.reverse ? 0 : 4 }, pl: { md: service.reverse ? 4 : 0 }, mb: { xs: 2, md: 0 } }}>
+            <Box>
+              <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2 }}>
+                {service.icon}
+                <Box>
+                  <Typography variant="h5" sx={{ fontWeight: 800, color: service.faded ? '#b2d8d8' : '#181f29', display: 'flex', alignItems: 'center' }}>
+                    {service.title}
+                    {service.comingSoon && (
+                      <Chip label="Coming Soon" size="small" sx={{ ml: 2, background: '#eafaf4', color: '#089e8e', fontWeight: 700 }} />
+                    )}
+                  </Typography>
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: service.faded ? '#b2d8d8' : '#181f29', mb: 1 }}>
+                    {service.subtitle}
+                  </Typography>
+                </Box>
               </Box>
+              <Typography variant="body1" sx={{ color: '#444', fontSize: 18, mb: 2 }}>
+                {service.description}
+              </Typography>
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: service.faded ? '#b2d8d8' : '#089e8e', mb: 1 }}>
+                What We Offer:
+              </Typography>
+              <List dense>
+                {service.offers.map((offer) => (
+                  <ListItem key={offer} sx={{ py: 0 }}>
+                    <ListItemIcon>
+                      <CheckCircleIcon sx={{ color: service.faded ? '#b2d8d8' : '#089e8e', fontSize: 22 }} />
+                    </ListItemIcon>
+                    <ListItemText primary={offer} primaryTypographyProps={{ fontSize: 16, color: '#444' }} />
+                  </ListItem>
+                ))}
+              </List>
+              <Button
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  borderRadius: 999,
+                  fontWeight: 700,
+                  px: 4,
+                  py: 1.2,
+                  fontSize: 16,
+                  backgroundColor: service.comingSoon ? '#eafaf4' : '#089e8e',
+                  color: service.comingSoon ? '#089e8e' : '#fff',
+                  textTransform: 'none',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: service.comingSoon ? '#d0f0e8' : '#067e71',
+                    color: service.comingSoon ? '#089e8e' : '#fff',
+                    boxShadow: 'none',
+                  },
+                }}
+                disabled={!!service.comingSoon}
+              >
+                {service.button}
+              </Button>
             </Box>
           </Grid>
-          <Grid item xs={12} md={6} order={{ xs: 1, md: service.reverse ? 1 : 2 }}>
-            <Box sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: 3, width: '100%', height: { xs: 220, md: 260 }, mb: { xs: 2, md: 0 }, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          {/* Image Column */}
+          <Grid item xs={12} md={6} order={{ xs: 1, md: service.reverse ? 1 : 2 }} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', mb: { xs: 2, md: 0 } }}>
+            <Box sx={{ borderRadius: 4, overflow: 'hidden', boxShadow: 3, width: '100%', height: { xs: 220, sm: 260, md: 340 }, background: '#eee', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
               <img src={service.img} alt={service.title} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 16 }} />
             </Box>
           </Grid>
