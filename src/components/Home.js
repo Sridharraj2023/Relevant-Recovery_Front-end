@@ -5,11 +5,6 @@ import CardActions from '@mui/material/CardActions';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import GroupIcon from '@mui/icons-material/Group';
 import PlaceIcon from '@mui/icons-material/Place';
-import EventIcon from '@mui/icons-material/Event';
-import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 
 
 const seaGreen = '#089e8e';
@@ -200,7 +195,7 @@ export default function Home() {
             </Grid>
           ))}
         </Grid>
-        <Button variant="contained" endIcon={<ArrowForwardIcon />} sx={{ background: seaGreen, color: '#fff', fontWeight: 700, borderRadius: 999, px: 5, py: 1.5, fontSize: 20, boxShadow: 'none', mt: 6, '&:hover': { background: '#067e71', boxShadow: 'none' } }}>
+        <Button variant="contained" endIcon={<FavoriteBorderIcon />} sx={{ background: seaGreen, color: '#fff', fontWeight: 700, borderRadius: 999, px: 5, py: 1.5, fontSize: 20, boxShadow: 'none', mt: 6, '&:hover': { background: '#067e71', boxShadow: 'none' } }}>
           Explore All Services
         </Button>
       </Box>
@@ -230,13 +225,13 @@ export default function Home() {
               }}>
                 <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
                   <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
-                    <EventIcon sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
+                    <FavoriteBorderIcon sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
                     <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
                       {event.date}
                     </Typography>
                     {event.free && (
                       <Chip
-                        icon={<CardGiftcardIcon sx={{ color: seaGreen, fontSize: 18 }} />}
+                        icon={<FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 18 }} />}
                         label="Free Ticket"
                         sx={{ ml: 'auto', background: '#b9fbc0', color: seaGreen, fontWeight: 700, fontSize: 15, borderRadius: 2, px: 1.5, height: 32 }}
                       />
@@ -246,9 +241,9 @@ export default function Home() {
                     {event.title}
                   </Typography>
                   <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: '#555', fontSize: 16 }}>
-                    <AccessTimeIcon sx={{ fontSize: 18, mr: 0.5 }} />
+                    <FavoriteBorderIcon sx={{ fontSize: 18, mr: 0.5 }} />
                     <span>{event.time}</span>
-                    <LocationOnIcon sx={{ fontSize: 18, ml: 2, mr: 0.5 }} />
+                    <PlaceIcon sx={{ fontSize: 18, ml: 2, mr: 0.5 }} />
                     <span>{event.location}</span>
                   </Box>
                   <Typography

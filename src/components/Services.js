@@ -1,9 +1,8 @@
 import React from 'react';
-import { Box, Typography, Grid, Button, Card, CardContent, Chip, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Typography, Grid, Button, Chip, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import GroupsIcon from '@mui/icons-material/Groups';
 import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import SpaIcon from '@mui/icons-material/Spa';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import PlaceIcon from '@mui/icons-material/Place';
 
