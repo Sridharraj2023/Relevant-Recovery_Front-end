@@ -16,8 +16,6 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 
-
-
 const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
@@ -39,16 +37,38 @@ export default function Navbar() {
 
   return (
     <AppBar position="sticky" elevation={0} sx={{ background: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.04)', border: 'none', top: 0, zIndex: 1100 }}>
-      <Toolbar sx={{ justifyContent: 'space-between', minHeight: 80, px: { xs: 2, md: 8 } }}>
+      <Toolbar sx={{ 
+        justifyContent: 'space-between', 
+        minHeight: { xs: 70, sm: 80, md: 80 },
+        px: { xs: 2, sm: 3, md: 4, lg: 6, xl: 8 },
+        py: { xs: 1, sm: 1.5 },
+        flexWrap: 'nowrap'
+      }}>
         {/* Logo and Brand */}
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
-          <FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 40, mr: 1 }} />
-          <Typography variant="h5" sx={{ fontWeight: 700, color: darkGray, letterSpacing: 0.5 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', flexShrink: 0 }}>
+          <FavoriteBorderIcon sx={{ 
+            color: seaGreen, 
+            fontSize: { xs: 32, sm: 36, md: 40 }, 
+            mr: { xs: 0.5, sm: 1 } 
+          }} />
+          <Typography variant="h5" sx={{ 
+            fontWeight: 700, 
+            color: darkGray, 
+            letterSpacing: 0.5,
+            fontSize: { xs: '1.1rem', sm: '1.25rem', md: '1.5rem' }
+          }}>
             Relevant Recovery
           </Typography>
         </Box>
+        
         {/* Navigation Links - Desktop Only */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 4 }}>
+        <Box sx={{ 
+          display: { xs: 'none', md: 'flex' }, 
+          gap: { md: 3, lg: 4 },
+          flex: 1,
+          justifyContent: 'center',
+          mx: 2
+        }}>
           {navLinks.map((link) => {
             const isActive = link.to !== '#' && location.pathname === link.to;
             return (
@@ -60,7 +80,7 @@ export default function Navbar() {
                 sx={{
                   fontWeight: isActive ? 700 : 500,
                   color: isActive ? seaGreen : darkGray,
-                  fontSize: 18,
+                  fontSize: { md: 16, lg: 18 },
                   background: 'none',
                   boxShadow: 'none',
                   textTransform: 'none',
@@ -68,8 +88,9 @@ export default function Navbar() {
                     background: 'none',
                     color: seaGreen,
                   },
-                  px: 0.5,
+                  px: { md: 1, lg: 1.5 },
                   minWidth: 0,
+                  whiteSpace: 'nowrap'
                 }}
               >
                 {link.label}
@@ -77,17 +98,18 @@ export default function Navbar() {
             );
           })}
         </Box>
+        
         {/* Donate Button - Desktop Only */}
-        <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+        <Box sx={{ display: { xs: 'none', md: 'flex' }, flexShrink: 0 }}>
           <Button
             variant="contained"
             disableElevation
             sx={{
               borderRadius: 999,
               fontWeight: 700,
-              px: 5,
-              py: 1.2,
-              fontSize: 18,
+              px: { md: 3, lg: 5 },
+              py: { md: 1, lg: 1.2 },
+              fontSize: { md: 16, lg: 18 },
               backgroundColor: seaGreen,
               color: '#fff',
               textTransform: 'none',
@@ -101,13 +123,15 @@ export default function Navbar() {
             $ Donate
           </Button>
         </Box>
+        
         {/* Hamburger Menu - Mobile Only */}
-        <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+        <Box sx={{ display: { xs: 'flex', md: 'none' }, flexShrink: 0 }}>
           <IconButton edge="end" color="inherit" aria-label="menu" onClick={handleDrawerOpen}>
-            <MenuIcon sx={{ fontSize: 36, color: darkGray }} />
+            <MenuIcon sx={{ fontSize: { xs: 32, sm: 36 }, color: darkGray }} />
           </IconButton>
         </Box>
       </Toolbar>
+      
       {/* Drawer for Mobile Nav */}
       <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
         <Box sx={{ width: 260 }} role="presentation" onClick={handleDrawerClose}>

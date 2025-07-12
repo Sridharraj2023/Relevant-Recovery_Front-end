@@ -132,9 +132,9 @@ export default function About() {
         <Typography variant="body1" sx={{ color: '#555', mb: 4, fontSize: 18, maxWidth: 700, mx: 'auto' }}>
           These principles guide everything we do and shape how we serve our community.
         </Typography>
-        <Grid container spacing={4} justifyContent="space-between" alignItems="stretch">
+        <Grid container spacing={4} justifyContent="center" alignItems="stretch">
           <Grid item xs={12} sm={6} md={3} display="flex" justifyContent="center">
-            <Card elevation={0} sx={{ width: 300, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
+            <Card elevation={0} sx={{ width: { xs: '100%', sm: 280, md: 300 }, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
               <CardContent sx={{ p: 0, m: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 48, mb: 2 }} />
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, mt: 1, wordBreak: 'break-word' }}>
@@ -147,7 +147,7 @@ export default function About() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3} display="flex" justifyContent="center">
-            <Card elevation={0} sx={{ width: 300, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
+            <Card elevation={0} sx={{ width: { xs: '100%', sm: 280, md: 300 }, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
               <CardContent sx={{ p: 0, m: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <GroupsIcon sx={{ color: seaGreen, fontSize: 48, mb: 2 }} />
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, mt: 1, wordBreak: 'break-word' }}>
@@ -160,7 +160,7 @@ export default function About() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3} display="flex" justifyContent="center">
-            <Card elevation={0} sx={{ width: 300, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
+            <Card elevation={0} sx={{ width: { xs: '100%', sm: 280, md: 300 }, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
               <CardContent sx={{ p: 0, m: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <SpaIcon sx={{ color: seaGreen, fontSize: 48, mb: 2 }} />
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, mt: 1, wordBreak: 'break-word' }}>
@@ -173,7 +173,7 @@ export default function About() {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6} md={3} display="flex" justifyContent="center">
-            <Card elevation={0} sx={{ width: 300, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
+            <Card elevation={0} sx={{ width: { xs: '100%', sm: 280, md: 300 }, height: 300, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', p: 2, textAlign: 'center', bgcolor: 'transparent', boxShadow: 'none' }}>
               <CardContent sx={{ p: 0, m: 0, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <EmojiEventsIcon sx={{ color: seaGreen, fontSize: 48, mb: 2 }} />
                 <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, mt: 1, wordBreak: 'break-word' }}>

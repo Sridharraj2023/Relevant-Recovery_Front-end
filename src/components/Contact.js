@@ -152,10 +152,35 @@ export default function Contact() {
         </Typography>
         <Grid container spacing={3} justifyContent="center">
           {helpCards.map((card) => (
-            <Grid item xs={12} sm={6} md={4} key={card.title}>
-              <Card sx={{ borderRadius: 3, boxShadow: 2, p: 2, minHeight: 120, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>{card.title}</Typography>
-                <Typography variant="body2" color="text.secondary">{card.desc}</Typography>
+            <Grid item xs={12} sm={6} md={4} key={card.title} display="flex" justifyContent="center">
+              <Card sx={{ 
+                borderRadius: 3, 
+                boxShadow: 2, 
+                p: { xs: 2, sm: 3 }, 
+                width: { xs: 380, sm: 280, md: 320, lg: 350 },
+                height: { xs: 160, sm: 160, md: 180 },
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                textAlign: 'center',
+                mx: 'auto'
+              }}>
+                <Typography variant="h6" sx={{ 
+                  fontWeight: 700, 
+                  mb: 1,
+                  fontSize: { xs: '1rem', sm: '1.1rem', md: '1.25rem' },
+                  lineHeight: 1.2
+                }}>
+                  {card.title}
+                </Typography>
+                <Typography variant="body2" sx={{ 
+                  color: 'text.secondary',
+                  fontSize: { xs: '0.875rem', sm: '0.9rem', md: '1rem' },
+                  lineHeight: 1.4
+                }}>
+                  {card.desc}
+                </Typography>
               </Card>
             </Grid>
           ))}

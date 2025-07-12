@@ -1,7 +1,5 @@
 import React from 'react';
 import { Box, Grid, Typography, Button, Chip } from '@mui/material';
-import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import GroupIcon from '@mui/icons-material/Group';
 import PlaceIcon from '@mui/icons-material/Place';
