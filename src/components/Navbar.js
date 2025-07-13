@@ -20,7 +20,7 @@ const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
   { label: 'Services', to: '/services' },
-  { label: 'Events', to: '#' },
+  { label: 'Events', to: '/events' },
   { label: 'Contact', to: '/contact' },
 ];
 

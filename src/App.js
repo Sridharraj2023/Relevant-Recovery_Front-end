@@ -6,22 +6,32 @@ import Home from './components/Home';
 import About from './components/About';
 import Services from './components/Services';
 import Contact from './components/Contact';
+import Events from './components/Events';
+import Admin from './components/Admin';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
   return (
     <BrowserRouter>
       <CssBaseline />
-      <Navbar />
-      <Container maxWidth="xl" disableGutters>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/contact" element={<Contact />} />
-        </Routes>
-      </Container>
-      <Footer />
+      <Routes>
+        <Route path="/admin" element={<Admin />} />
+        <Route path="/*" element={
+          <>
+            <Navbar />
+            <Container maxWidth="xl" disableGutters>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/events" element={<Events />} />
+                <Route path="/contact" element={<Contact />} />
+              </Routes>
+            </Container>
+            <Footer />
+          </>
+        } />
+      </Routes>
     </BrowserRouter>
   );
 }
