@@ -25,8 +25,8 @@ import {
 
   Alert,
   CircularProgress,
-  
-
+  Snackbar,
+  Alert as MuiAlert
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -50,6 +50,7 @@ const AdminDashboard = ({ onLogout }) => {
   const [openEventForm, setOpenEventForm] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const [deleteDialog, setDeleteDialog] = useState({ open: false, eventId: null });
+  const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
 
  
 
@@ -115,8 +116,10 @@ const AdminDashboard = ({ onLogout }) => {
 
       setEvents(events.filter(event => event._id !== deleteDialog.eventId));
       setDeleteDialog({ open: false, eventId: null });
+      setToast({ open: true, message: 'Event deleted successfully!', severity: 'success' });
     } catch (err) {
       setError(err.message);
+      setToast({ open: true, message: 'Failed to delete event', severity: 'error' });
     }
   };
 
@@ -125,11 +128,17 @@ const AdminDashboard = ({ onLogout }) => {
       setEvents(events.map(event => 
         event._id === savedEvent._id ? savedEvent : event
       ));
+      setToast({ open: true, message: 'Event updated successfully!', severity: 'success' });
     } else {
       setEvents([savedEvent, ...events]);
+      setToast({ open: true, message: 'Event created successfully!', severity: 'success' });
     }
     setOpenEventForm(false);
     setEditingEvent(null);
+  };
+
+  const handleToastClose = () => {
+    setToast({ ...toast, open: false });
   };
 
   const drawer = (
@@ -441,6 +450,22 @@ const AdminDashboard = ({ onLogout }) => {
           </Button>
         </DialogActions>
       </Dialog>
+
+      {/* Toast Notification */}
+      <Snackbar
+        open={toast.open}
+        autoHideDuration={4000}
+        onClose={handleToastClose}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      >
+        <MuiAlert
+          onClose={handleToastClose}
+          severity={toast.severity}
+          sx={{ width: '100%' }}
+        >
+          {toast.message}
+        </MuiAlert>
+      </Snackbar>
     </Box>
   );
 };
