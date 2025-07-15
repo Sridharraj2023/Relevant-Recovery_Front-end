@@ -130,7 +130,7 @@ const Events = () => {
                   borderRadius: 4,
                   boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
                   p: 0,
-                  height: { xs: 'auto', md: 400 },
+                  height: { xs: 'auto', md: 500 },
                   width: { xs: '100%', md: '70vw' }, // 70% of viewport width
                   maxWidth: 950,
                   display: 'flex',
@@ -138,7 +138,7 @@ const Events = () => {
                   overflow: 'hidden',
                   alignItems: 'stretch',
                   position: 'relative',
-                  minHeight: { xs: 'auto', md: 600 }, // Increase card height for desktop
+                  minHeight: { xs: 'auto', md: 700 }, // Increase card height for desktop
                 }}>
                   {/* Event Image */}
                   <Box sx={{
@@ -263,7 +263,7 @@ const Events = () => {
                       )}
                       {/* 9. Special Gift */}
                       {event.specialGift && (
-                        <Box sx={{ background: '#d1fae5', borderRadius: 2, p: 2, mb: 2, display: 'flex', alignItems: 'center' }}>
+                        <Box sx={{ background: '#d1fae5', borderRadius: 2, p: 2, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                           <span role="img" aria-label="gift" style={{ fontSize: 22, marginRight: 8 }}>🎁</span>
                           <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#089e8e', mr: 1 }}>
                             Special Gift for Attendees:
