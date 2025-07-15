@@ -354,8 +354,8 @@ const AdminDashboard = ({ onLogout }) => {
                         {event.title}
                       </Typography>
                       <Chip
-                        label={event.free ? 'Free' : 'Paid'}
-                        color={event.free ? 'success' : 'primary'}
+                        label={event.cost ? event.cost : (event.free ? 'Free' : 'Paid')}
+                        color={event.cost === 'Free' || event.free ? 'success' : 'primary'}
                         size="small"
                         sx={{ fontWeight: 600 }}
                       />
@@ -366,9 +366,23 @@ const AdminDashboard = ({ onLogout }) => {
                     <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
                       <strong>Time:</strong> {event.time}
                     </Typography>
-                    <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-                      <strong>Location:</strong> {event.location}
+                    <Typography variant="body2" sx={{ color: '#666', mb: 1 }}>
+                      <strong>Place:</strong> {event.place || event.location}
                     </Typography>
+                    {/* Image */}
+                    {event.image && (
+                      <Box sx={{ mb: 1 }}>
+                        <img
+                          src={
+                            event.image.startsWith('http')
+                              ? event.image
+                              : `/uploads/events/${event.image}`
+                          }
+                          alt={event.title}
+                          style={{ width: '100%', maxHeight: 120, objectFit: 'cover', borderRadius: 6 }}
+                        />
+                      </Box>
+                    )}
                     <Typography
                       variant="body2"
                       sx={{
@@ -385,6 +399,31 @@ const AdminDashboard = ({ onLogout }) => {
                     >
                       {event.desc}
                     </Typography>
+                    {/* Highlights */}
+                    {event.highlights && event.highlights.length > 0 && (
+                      <Box sx={{ mb: 1 }}>
+                        <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Highlights:</Typography>
+                        <ul style={{ margin: 0, paddingLeft: 18 }}>
+                          {event.highlights.map((h, idx) => (
+                            <li key={idx} style={{ color: '#089e8e', fontSize: 14 }}>{h}</li>
+                          ))}
+                        </ul>
+                      </Box>
+                    )}
+                    {/* Special Gift */}
+                    {event.specialGift && (
+                      <Box sx={{ background: '#d1fae5', borderRadius: 2, p: 1, mb: 1 }}>
+                        <Typography variant="body2" sx={{ color: '#089e8e', fontWeight: 600 }}>
+                          🎁 {event.specialGift}
+                        </Typography>
+                      </Box>
+                    )}
+                    {/* Action Type */}
+                    {event.actionType && (
+                      <Typography variant="body2" sx={{ color: '#089e8e', fontWeight: 600, mb: 1 }}>
+                        Action: {event.actionType}
+                      </Typography>
+                    )}
                   </Box>
                   <Box sx={{ display: 'flex', gap: 1, mt: 'auto', justifyContent: 'space-between' }}>
                     <Button
