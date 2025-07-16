@@ -210,7 +210,7 @@ const Events = () => {
                         </Typography>
                       </Box>
                       {/* 2. Title */}
-                      <Typography variant="h4" sx={{ fontWeight: 900, color: '#181f29', mb: 1, lineHeight: 1.2 }}>
+                      <Typography variant="h6" sx={{ fontWeight: 900, color: '#181f29', mb: 1, lineHeight: 1.2 }}>
                         {event.title}
                       </Typography>
                       {/* 3. Time */}
