@@ -19,9 +19,9 @@ const EventForm = ({ open, event, onClose, onSave }) => {
     date: '',
     title: '',
     time: '',
-    location: '',
+    place: '', // was 'location'
     desc: '',
-    action: '',
+    actionType: '', // was 'action'
     free: false,
     image: '',
     capacity: '',
@@ -49,32 +49,30 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         date: event.date || '',
         title: event.title || '',
         time: event.time || '',
-        location: event.location || '',
+        place: event.place || '', // was 'location'
         desc: event.desc || '',
-        action: event.action || '',
+        actionType: event.actionType || '', // was 'action'
         free: event.free || false,
         image: event.image || '',
         capacity: event.capacity || '',
         cost: event.cost || '',
         highlights: highlightsArr.length ? highlightsArr : [''],
-        specialGift: event.specialGift || '',
-        actionType: event.actionType || ''
+        specialGift: event.specialGift || ''
       });
     } else {
       setFormData({
         date: '',
         title: '',
         time: '',
-        location: '',
+        place: '', // was 'location'
         desc: '',
-        action: '',
+        actionType: '', // was 'action'
         free: false,
         image: '',
         capacity: '',
         cost: '',
         highlights: [''],
-        specialGift: '',
-        actionType: ''
+        specialGift: ''
       });
     }
     setError('');
@@ -110,7 +108,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
       form.append('date', formData.date);
       form.append('title', formData.title);
       form.append('time', formData.time);
-      form.append('place', formData.place);
+      form.append('place', formData.place); // was formData.location
       form.append('cost', formData.cost);
       form.append('capacity', formData.capacity);
       form.append('desc', formData.desc);
@@ -119,7 +117,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
       }
       form.append('highlights', JSON.stringify(formData.highlights.filter(h => h && h.trim() !== '')));
       form.append('specialGift', formData.specialGift);
-      form.append('actionType', formData.actionType);
+      form.append('actionType', formData.actionType); // was formData.action
       const response = await fetch(url, {
         method: event ? 'PUT' : 'POST',
         headers: {
@@ -239,7 +237,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                 <Grid item xs={12} sx={{ width: '100%' }}>
                   <TextField
                     fullWidth
-                    label="Place"
+                    label="Event Place"
                     name="place"
                     value={formData.place}
                     onChange={handleChange}

@@ -156,7 +156,7 @@ const Events = () => {
                   }}>
                     {event.image ? (
                       <img
-                        src={event.image}
+                        src={event.image ? `https://relevant-recovery-back-end.onrender.com/uploads/events/${event.image}` : ''}
                         alt={event.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
