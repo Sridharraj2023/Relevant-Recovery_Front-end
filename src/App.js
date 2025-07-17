@@ -8,6 +8,7 @@ import Services from './components/Services';
 import Contact from './components/Contact';
 import Events from './components/Events';
 import Admin from './components/Admin';
+import DonationPage from './components/DonationPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -24,6 +25,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />
+                <Route path="/donation" element={<DonationPage open={true} onClose={null} />} />
                 <Route path="/events" element={<Events />} />
                 <Route path="/contact" element={<Contact />} />
               </Routes>

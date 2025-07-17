@@ -25,7 +25,12 @@ import {
   Alert,
   CircularProgress,
   Snackbar,
-  Alert as MuiAlert
+  Alert as MuiAlert,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow
 } from '@mui/material';
 import {
   Menu as MenuIcon,
@@ -35,10 +40,7 @@ import {
   Edit as EditIcon,
   Delete as DeleteIcon,
   Logout as LogoutIcon,
-  CalendarToday,
-  AccessTime,
-  LocationOn,
-} from '@mui/icons-material';
+  } from '@mui/icons-material';
 import EventForm from './EventForm';
 
 const drawerWidth = 240;
@@ -334,157 +336,60 @@ const AdminDashboard = ({ onLogout }) => {
           </Box>
 
           {/* Events List */}
-          <Grid container spacing={4} justifyContent="center" alignItems="stretch" sx={{ maxWidth: 1020, mx: 'auto', flexWrap: 'wrap' }}>
-            {events.map((event) => (
-              <Grid item xs={12} key={event._id} sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Box sx={{
-                  background: '#e6fcf5',
-                  borderRadius: 4,
-                  boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
-                  p: 0,
-                  height: { xs: 'auto', md: 500 },
-                  width: { xs: '100%', md: '70vw' },
-                  maxWidth: 950,
-                  display: 'flex',
-                  flexDirection: { xs: 'column', md: 'row' },
-                  overflow: 'hidden',
-                  alignItems: 'stretch',
-                  position: 'relative',
-                  minHeight: { xs: 'auto', md: 700 },
-                }}>
-                  {/* Event Image */}
-                  <Box sx={{
-                    width: { xs: '100%', md: 300 },
-                    height: { xs: 200, md: '40%' },
-                    flexShrink: 0,
-                    background: '#cceee5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    borderRadius: { xs: 0, md: 4 },
-                    marginLeft: { xs: 0, md: 2 },
-                    marginTop: { xs: 0, md: 2 },
-                  }}>
+          {events.length > 0 ? (
+            <Box sx={{ overflowX: 'auto', maxWidth: '100%', mb: 4 }}>
+              <Table sx={{ minWidth: 1200, borderRadius: 2 }}>
+                <TableHead>
+                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
+                    <TableCell><b>Image</b></TableCell>
+                    <TableCell><b>Title</b></TableCell>
+                    <TableCell><b>Date</b></TableCell>
+                    <TableCell><b>Time</b></TableCell>
+                    <TableCell><b>Location</b></TableCell>
+                    <TableCell><b>Capacity</b></TableCell>
+                    <TableCell><b>Cost</b></TableCell>
+                    <TableCell><b>Description</b></TableCell>
+                    <TableCell><b>Highlights</b></TableCell>
+                    <TableCell><b>Special Gift</b></TableCell>
+                    <TableCell><b>Free</b></TableCell>
+                    <TableCell align="center"><b>Actions</b></TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {events.map((event, idx) => (
+                    <TableRow key={event._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
+                      <TableCell>
                     {event.image ? (
                       <img
-                        src={event.image ? `https://relevant-recovery-back-end.onrender.com/uploads/events/${event.image}` : ''}
+                            src={`https://relevant-recovery-back-end.onrender.com/uploads/events/${event.image}`}
                         alt={event.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                            style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 4 }}
                       />
                     ) : (
-                      <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 24 }}>
+                          <Box sx={{ width: 80, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 16, bgcolor: '#cceee5', borderRadius: 2 }}>
                         No Image
                       </Box>
                     )}
-                  </Box>
-                  {/* Event Details */}
-                  <Box sx={{
-                    flex: 1,
-                    p: { xs: 3, md: 4 },
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    position: 'relative',
-                    background: '#e6fcf5',
-                  }}>
-                    {/* Free Ticket Button (top right) */}
-                    <Box sx={{ position: 'absolute', top: 24, right: 24, zIndex: 2, display: { xs: 'none', md: 'block' } }}>
-                      <Button
-                        variant="contained"
-                        size="small"
-                        sx={{
-                          background: '#d1fae5',
-                          color: '#089e8e',
-                          fontWeight: 700,
-                          borderRadius: 999,
-                          fontSize: 16,
-                          px: 3,
-                          boxShadow: 'none',
-                          textTransform: 'none',
-                          '&:hover': {
-                            background: '#b9f6ca',
-                            color: '#089e8e',
-                            boxShadow: 'none',
-                          },
-                        }}
-                        disabled={event.cost !== 'Free' && !event.free}
-                      >
-                        Free Ticket
-                      </Button>
-                    </Box>
-                    <Box>
-                      {/* 1. Date */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <CalendarToday sx={{ fontSize: 20, color: '#089e8e', mr: 1 }} />
-                        <Typography variant="body1" sx={{ color: '#089e8e', fontWeight: 700, mr: 2 }}>
-                          {event.date}
-                        </Typography>
-                      </Box>
-                      {/* 2. Title */}
-                      <Typography variant="h4" sx={{ fontWeight: 900, color: '#181f29', mb: 1, lineHeight: 1.2 }}>
-                        {event.title}
-                      </Typography>
-                      {/* 3. Time */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <AccessTime sx={{ fontSize: 18, color: '#089e8e', mr: 1 }} />
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
-                          {event.time}
-                        </Typography>
-                      </Box>
-                      {/* 4. Location */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <LocationOn sx={{ fontSize: 18, color: '#089e8e', mr: 1 }} />
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
-                          {event.place}
-                        </Typography>
-                      </Box>
-                      {/* 5. Capacity */}
-                      {event.capacity && (
-                        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                          <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
-                            <b>Capacity:</b> {event.capacity} people
-                          </Typography>
-                        </Box>
-                      )}
-                      {/* 6. Cost */}
-                      <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-                        <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
-                          <b>Cost:</b> {event.cost || (event.free ? 'Free' : 'Paid')}
-                        </Typography>
-                      </Box>
-                      {/* 7. Description */}
-                      <Typography
-                        variant="body1"
-                        sx={{ color: '#555', mb: 2, lineHeight: 1.6 }}
-                      >
-                        {event.desc}
-                      </Typography>
-                      {/* 8. Event Highlights */}
-                      {event.highlights && event.highlights.length > 0 && (
-                        <Box sx={{ mb: 2 }}>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 1 }}>
-                            Event Highlights:
-                          </Typography>
-                          <ul style={{ margin: 0, paddingLeft: 20 }}>
+                      </TableCell>
+                      <TableCell>{event.title}</TableCell>
+                      <TableCell>{event.date}</TableCell>
+                      <TableCell>{event.time}</TableCell>
+                      <TableCell>{event.place}</TableCell>
+                      <TableCell>{event.capacity || '-'}</TableCell>
+                      <TableCell>{event.cost || (event.free ? 'Free' : 'Paid')}</TableCell>
+                      <TableCell sx={{ maxWidth: 200, whiteSpace: 'pre-line', overflow: 'hidden', textOverflow: 'ellipsis' }}>{event.desc}</TableCell>
+                      <TableCell>
+                        {event.highlights && event.highlights.length > 0 ? (
+                          <ul style={{ margin: 0, paddingLeft: 18 }}>
                             {event.highlights.map((h, idx) => (
-                              <li key={idx} style={{ color: '#089e8e', marginBottom: 4, fontSize: 16, fontWeight: 500 }}>{h}</li>
+                              <li key={idx} style={{ color: '#089e8e', fontSize: 14 }}>{h}</li>
                             ))}
                           </ul>
-                        </Box>
-                      )}
-                      {/* 9. Special Gift */}
-                      {event.specialGift && (
-                        <Box sx={{ background: '#d1fae5', borderRadius: 2, p: 2, mb: 2, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-                          <span role="img" aria-label="gift" style={{ fontSize: 22, marginRight: 8 }}>🎁</span>
-                          <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#089e8e', mr: 1 }}>
-                            Special Gift for Attendees:
-                          </Typography>
-                          <Typography variant="body2" sx={{ color: '#089e8e' }}>{event.specialGift}</Typography>
-                        </Box>
-                      )}
-                    </Box>
-                    <Box sx={{ display: 'flex', gap: 1, mt: 2, justifyContent: 'space-between' }}>
+                        ) : '-'}
+                      </TableCell>
+                      <TableCell>{event.specialGift || '-'}</TableCell>
+                      <TableCell>{event.free ? 'Yes' : 'No'}</TableCell>
+                      <TableCell align="center">
                       <Button
                         size="small"
                         startIcon={<EditIcon />}
@@ -497,18 +402,17 @@ const AdminDashboard = ({ onLogout }) => {
                         size="small"
                         startIcon={<DeleteIcon />}
                         onClick={() => setDeleteDialog({ open: true, eventId: event._id })}
-                        sx={{ color: '#d32f2f' }}
+                          sx={{ color: '#d32f2f', ml: 1 }}
                       >
                         Delete
                       </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
                     </Box>
-                  </Box>
-                </Box>
-              </Grid>
-            ))}
-          </Grid>
-
-          {events.length === 0 && !loading && (
+          ) : (
             <Paper sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="h6" sx={{ color: '#666', mb: 2 }}>
                 No events found

@@ -16,6 +16,7 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import { useState } from 'react';
 
+
 const navLinks = [
   { label: 'Home', to: '/' },
   { label: 'About', to: '/about' },
@@ -104,6 +105,8 @@ export default function Navbar() {
           <Button
             variant="contained"
             disableElevation
+            component={RouterLink}
+            to="/donation"
             sx={{
               borderRadius: 999,
               fontWeight: 700,
@@ -161,6 +164,8 @@ export default function Navbar() {
               variant="contained"
               fullWidth
               disableElevation
+              component={RouterLink}
+              to="/donation"
               sx={{
                 borderRadius: 999,
                 fontWeight: 700,
