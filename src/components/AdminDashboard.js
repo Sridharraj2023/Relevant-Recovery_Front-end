@@ -42,6 +42,7 @@ import {
   Logout as LogoutIcon,
   } from '@mui/icons-material';
 import EventForm from './EventForm';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -144,6 +145,8 @@ const AdminDashboard = ({ onLogout }) => {
     setToast({ ...toast, open: false });
   };
 
+  const navigate = useNavigate();
+
   const drawer = (
     <Box>
       <Toolbar>
@@ -153,7 +156,7 @@ const AdminDashboard = ({ onLogout }) => {
       </Toolbar>
       <List>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate('/admin')}>
             <ListItemIcon>
               <DashboardIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
@@ -161,7 +164,7 @@ const AdminDashboard = ({ onLogout }) => {
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
-          <ListItemButton>
+          <ListItemButton onClick={() => navigate('/adminevent')}>
             <ListItemIcon>
               <EventIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
@@ -251,6 +254,7 @@ const AdminDashboard = ({ onLogout }) => {
           mt: 8
         }}
       >
+        {/* Dashboard Stats and Info Only - Remove Create Event button and event table */}
         <Container maxWidth="xl">
           {error && (
             <Alert severity="error" sx={{ mb: 3 }}>
@@ -319,109 +323,6 @@ const AdminDashboard = ({ onLogout }) => {
               </Card>
             </Grid>
           </Grid>
-
-          {/* Actions */}
-          <Box sx={{ mb: 3 }}>
-            <Button
-              variant="contained"
-              startIcon={<AddIcon />}
-              onClick={handleCreateEvent}
-              sx={{
-                backgroundColor: '#089e8e',
-                '&:hover': { backgroundColor: '#067e71' }
-              }}
-            >
-              Create New Event
-            </Button>
-          </Box>
-
-          {/* Events List */}
-          {events.length > 0 ? (
-            <Box sx={{ overflowX: 'auto', maxWidth: '100%', mb: 4 }}>
-              <Table sx={{ minWidth: 1200, borderRadius: 2 }}>
-                <TableHead>
-                  <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                    <TableCell><b>Image</b></TableCell>
-                    <TableCell><b>Title</b></TableCell>
-                    <TableCell><b>Date</b></TableCell>
-                    <TableCell><b>Time</b></TableCell>
-                    <TableCell><b>Location</b></TableCell>
-                    <TableCell><b>Capacity</b></TableCell>
-                    <TableCell><b>Cost</b></TableCell>
-                    <TableCell><b>Description</b></TableCell>
-                    <TableCell><b>Highlights</b></TableCell>
-                    <TableCell><b>Special Gift</b></TableCell>
-                    <TableCell><b>Free</b></TableCell>
-                    <TableCell align="center"><b>Actions</b></TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {events.map((event, idx) => (
-                    <TableRow key={event._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
-                      <TableCell>
-                    {event.image ? (
-                      <img
-                            src={`https://relevant-recovery-back-end.onrender.com/uploads/events/${event.image}`}
-                        alt={event.title}
-                            style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 4 }}
-                      />
-                    ) : (
-                          <Box sx={{ width: 80, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 16, bgcolor: '#cceee5', borderRadius: 2 }}>
-                        No Image
-                      </Box>
-                    )}
-                      </TableCell>
-                      <TableCell>{event.title}</TableCell>
-                      <TableCell>{event.date}</TableCell>
-                      <TableCell>{event.time}</TableCell>
-                      <TableCell>{event.place}</TableCell>
-                      <TableCell>{event.capacity || '-'}</TableCell>
-                      <TableCell>{event.cost || (event.free ? 'Free' : 'Paid')}</TableCell>
-                      <TableCell sx={{ maxWidth: 200, whiteSpace: 'pre-line', overflow: 'hidden', textOverflow: 'ellipsis' }}>{event.desc}</TableCell>
-                      <TableCell>
-                        {event.highlights && event.highlights.length > 0 ? (
-                          <ul style={{ margin: 0, paddingLeft: 18 }}>
-                            {event.highlights.map((h, idx) => (
-                              <li key={idx} style={{ color: '#089e8e', fontSize: 14 }}>{h}</li>
-                            ))}
-                          </ul>
-                        ) : '-'}
-                      </TableCell>
-                      <TableCell>{event.specialGift || '-'}</TableCell>
-                      <TableCell>{event.free ? 'Yes' : 'No'}</TableCell>
-                      <TableCell align="center">
-                      <Button
-                        size="small"
-                        startIcon={<EditIcon />}
-                        onClick={() => handleEditEvent(event)}
-                        sx={{ color: '#089e8e' }}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        size="small"
-                        startIcon={<DeleteIcon />}
-                        onClick={() => setDeleteDialog({ open: true, eventId: event._id })}
-                          sx={{ color: '#d32f2f', ml: 1 }}
-                      >
-                        Delete
-                      </Button>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-                    </Box>
-          ) : (
-            <Paper sx={{ p: 4, textAlign: 'center' }}>
-              <Typography variant="h6" sx={{ color: '#666', mb: 2 }}>
-                No events found
-              </Typography>
-              <Typography variant="body2" sx={{ color: '#666' }}>
-                Create your first event to get started
-              </Typography>
-            </Paper>
-          )}
         </Container>
       </Box>
 

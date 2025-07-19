@@ -9,6 +9,7 @@ import Contact from './components/Contact';
 import Events from './components/Events';
 import Admin from './components/Admin';
 import DonationPage from './components/DonationPage';
+import AdminEventTable from './components/AdminEventTable';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
       <CssBaseline />
       <Routes>
         <Route path="/admin" element={<Admin />} />
+        <Route path="/adminevent" element={<AdminEventTable />} />
         <Route path="/*" element={
           <>
             <Navbar />

@@ -52,7 +52,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         place: event.place || '', // was 'location'
         desc: event.desc || '',
         actionType: event.actionType || '', // was 'action'
-        free: event.free || false,
+        free: event.free === true || event.free === "true",
         image: event.image || '',
         capacity: event.capacity || '',
         cost: event.cost || '',
@@ -118,6 +118,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
       form.append('highlights', JSON.stringify(formData.highlights.filter(h => h && h.trim() !== '')));
       form.append('specialGift', formData.specialGift);
       form.append('actionType', formData.actionType); // was formData.action
+      form.append('free', formData.free);
       const response = await fetch(url, {
         method: event ? 'PUT' : 'POST',
         headers: {
