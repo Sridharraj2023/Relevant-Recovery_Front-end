@@ -12,7 +12,6 @@ import {
   ListItemText,
   ListItemButton,
   Container,
-  Paper,
   Grid,
   Card,
   CardContent,
@@ -26,19 +25,11 @@ import {
   CircularProgress,
   Snackbar,
   Alert as MuiAlert,
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableRow
 } from '@mui/material';
 import {
   Menu as MenuIcon,
   Dashboard as DashboardIcon,
   Event as EventIcon,
-  Add as AddIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
   Logout as LogoutIcon,
   } from '@mui/icons-material';
 import EventForm from './EventForm';
@@ -92,16 +83,6 @@ const AdminDashboard = ({ onLogout }) => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     onLogout();
-  };
-
-  const handleCreateEvent = () => {
-    setEditingEvent(null);
-    setOpenEventForm(true);
-  };
-
-  const handleEditEvent = (event) => {
-    setEditingEvent(event);
-    setOpenEventForm(true);
   };
 
   const handleDeleteEvent = async () => {

@@ -251,7 +251,7 @@ const AdminEventTable = () => {
                       <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>
                         {event.image ? (
                           <img
-                            src={`https://relevant-recovery-back-end.onrender.com/uploads/events/${event.image}`}
+                            src={event.image}
                             alt={event.title}
                             style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 4 }}
                           />

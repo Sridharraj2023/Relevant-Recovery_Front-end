@@ -10,19 +10,19 @@ const heroImg = 'https://images.unsplash.com/photo-1609234656388-0ff363383899?au
 
 const supportCards = [
   {
-    icon: <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 36 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Recovery Coaching',
+    icon: <FavoriteBorderIcon sx={{ color: '#089e8e', fontSize: 40, mb: 2 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Recovery Coaching',
     desc: '1:1 and group-based guidance from trained recovery coaches who understand your journey.'
   },
   {
-    icon: <GroupIcon sx={{ color: '#fff', fontSize: 36 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Community Events',
+    icon: <GroupIcon sx={{ color: '#089e8e', fontSize: 40, mb: 2 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Community Events',
     desc: 'Sober-friendly gatherings, workshops, and celebrations that build lasting connections.'
   },
   {
-    icon: <FavoriteBorderIcon sx={{ color: '#fff', fontSize: 36 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Family Support',
+    icon: <FavoriteBorderIcon sx={{ color: '#089e8e', fontSize: 40, mb: 2 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Family Support',
     desc: 'Resources, coaching, and guidance for families affected by addiction.'
   },
   {
-    icon: <PlaceIcon sx={{ color: '#fff', fontSize: 36 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Recovery Ranch',
+    icon: <PlaceIcon sx={{ color: '#089e8e', fontSize: 40, mb: 2 }} />, bg: 'linear-gradient(135deg, #0ec7a0 0%, #0ea7c7 100%)', title: 'Recovery Ranch',
     desc: 'Coming Soon: A nature-based retreat offering immersive healing and community connection.'
   },
 ];
@@ -77,8 +77,8 @@ export default function Home() {
               <Typography
                 component="h1"
                 sx={{
-                  fontWeight: 900,
-                  fontSize: { xs: '2.5rem', sm: '3.5rem', md: '4.5rem' },
+                  fontWeight: 700,
+                  fontSize: { xs: '2rem', sm: '3rem', md: '4rem' },
                   lineHeight: 1.05,
                   mb: 2,
                   letterSpacing: -2,
@@ -101,11 +101,11 @@ export default function Home() {
                   sx={{
                     background: '#fff',
                     color: seaGreen,
-                    fontWeight: 700,
+                    fontWeight: 600,
                     borderRadius: 999,
                     px: 5,
                     py: 1.5,
-                    fontSize: 20,
+                    fontSize: 15,
                     boxShadow: 'none',
                     '&:hover': { background: '#e6f7f5', boxShadow: 'none' },
                   }}
@@ -117,11 +117,11 @@ export default function Home() {
                   sx={{
                     borderColor: '#fff',
                     color: '#fff',
-                    fontWeight: 700,
+                    fontWeight: 600,
                     borderRadius: 999,
                     px: 5,
                     py: 1.5,
-                    fontSize: 20,
+                    fontSize: 15,
                     boxShadow: 'none',
                     '&:hover': { background: '#fff', boxShadow: 'none', borderColor: '#fff', color: seaGreen, },
                   }}
@@ -132,7 +132,7 @@ export default function Home() {
             </Box>
           </Grid>
           <Grid item xs={12} md={5} sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
-            <Box sx={{ borderRadius: 6, overflow: 'hidden', boxShadow: 6, width: { xs: '100%', md: 520, lg: 600 }, height: { xs: 'auto', md: 360, lg: 400 }, ml: 'auto', mt: { xs: 4, md: 0 } }}>
+            <Box sx={{ borderRadius: 6, overflow: 'hidden', boxShadow: 6, width: { xs: '100%', md: 470, lg: 550 }, height: { xs: 'auto', md: 340, lg: 380 }, ml: 'auto', mt: { xs: 4, md: 0 } }}>
               <img src={heroImg} alt="Community" style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', borderRadius: 32 }} />
             </Box>
           </Grid>
@@ -154,7 +154,7 @@ export default function Home() {
 
       {/* Support Section */}
       <Box sx={{ py: 10, px: { xs: 2, md: 8 }, background: 'linear-gradient(180deg, #eafaf4 0%, #e6f4fa 100%)', textAlign: 'center' }}>
-        <Typography variant="h3" sx={{ fontWeight: 900, mb: 2, color: '#181f29' }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, color: '#181f29' }}>
           How We Support You
         </Typography>
         <Typography variant="h6" sx={{ mb: 5, color: '#555', maxWidth: 800, mx: 'auto', fontWeight: 400 }}>
@@ -193,7 +193,7 @@ export default function Home() {
             </Grid>
           ))}
         </Grid>
-        <Button variant="contained" endIcon={<FavoriteBorderIcon />} sx={{ background: seaGreen, color: '#fff', fontWeight: 700, borderRadius: 999, px: 5, py: 1.5, fontSize: 20, boxShadow: 'none', mt: 6, '&:hover': { background: '#067e71', boxShadow: 'none' } }}>
+        <Button variant="contained" endIcon={<FavoriteBorderIcon />} sx={{ background: seaGreen, color: '#fff', fontWeight: 600, borderRadius: 999, px: 5, py: 1.5, fontSize: 18, boxShadow: 'none', mt: 6, '&:hover': { background: '#067e71', boxShadow: 'none' } }}>
           Explore All Services
         </Button>
       </Box>
