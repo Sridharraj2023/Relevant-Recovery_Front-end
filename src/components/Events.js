@@ -131,14 +131,16 @@ const Events = () => {
                   boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
                   p: 0,
                   height: { xs: 'auto', md: 500 },
-                  width: { xs: '100%', md: '70vw' }, // 70% of viewport width
-                  maxWidth: 950,
+                  width: { xs: '100%', md: '70vw', xl: 950 },
+                  maxWidth: { xs: '100%', md: 950 },
+                  minWidth: { xl: 700 },
                   display: 'flex',
                   flexDirection: { xs: 'column', md: 'row' },
                   overflow: 'hidden',
                   alignItems: 'stretch',
                   position: 'relative',
-                  minHeight: { xs: 'auto', md: 700 }, // Increase card height for desktop
+                  minHeight: { xs: 'auto', md: 700 },
+                  mx: 'auto', // center on large screens
                 }}>
                   {/* Event Image */}
                   <Box sx={{
