@@ -161,6 +161,7 @@ const Events = () => {
                         src={event.image}
                         alt={event.title}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        onError={e => { e.target.onerror = null; e.target.src = '/path/to/placeholder.jpg'; }}
                       />
                     ) : (
                       <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 24 }}>
