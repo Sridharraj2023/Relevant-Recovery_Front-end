@@ -11,7 +11,8 @@ import {
   Alert,
   CircularProgress,
   Box,
-  Paper
+  Paper,
+  MenuItem
 } from '@mui/material';
 
 const EventForm = ({ open, event, onClose, onSave }) => {
@@ -262,11 +263,25 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                     variant="outlined"
                     size="medium"
                     margin="dense"
-                    SelectProps={{ native: true }}
+                    SelectProps={{
+                      native: false,
+                      MenuProps: {
+                        PaperProps: {
+                          sx: {
+                            maxHeight: 200,
+                            mt: 1,
+                            '& .MuiMenuItem-root': {
+                              justifyContent: 'center',
+                              textAlign: 'center'
+                            }
+                          }
+                        }
+                      }
+                    }}
                   >
-                    <option value="">Select</option>
-                    <option value="Free">Free</option>
-                    <option value="Paid">Paid</option>
+                    <MenuItem value="">Select</MenuItem>
+                    <MenuItem value="Free">Free</MenuItem>
+                    <MenuItem value="Paid">Paid</MenuItem>
                   </TextField>
                 </Grid>
                 {/* Capacity */}
@@ -386,11 +401,25 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                     variant="outlined"
                     size="medium"
                     margin="dense"
-                    SelectProps={{ native: true }}
+                    SelectProps={{
+                      native: false,
+                      MenuProps: {
+                        PaperProps: {
+                          sx: {
+                            maxHeight: 200,
+                            mt: 1,
+                            '& .MuiMenuItem-root': {
+                              justifyContent: 'center',
+                              textAlign: 'center'
+                            }
+                          }
+                        }
+                      }
+                    }}
                   >
-                    <option value="">Select</option>
-                    <option value="Register Now">Register Now</option>
-                    <option value="Book Ticket">Book Ticket</option>
+                    <MenuItem value="">Select</MenuItem>
+                    <MenuItem value="Register Now">Register Now</MenuItem>
+                    <MenuItem value="Book Ticket">Book Ticket</MenuItem>
                   </TextField>
                 </Grid>
               </Grid>
