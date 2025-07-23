@@ -199,7 +199,7 @@ const Events = () => {
                             boxShadow: 'none',
                           },
                         }}
-                        disabled={event.cost !== 'Free' && !event.free}
+                        disabled={event.cost !== 'Free'}
                       >
                         Free Ticket
                       </Button>
@@ -241,7 +241,7 @@ const Events = () => {
                       {/* 6. Cost */}
                       <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
                         <Typography variant="body2" sx={{ color: '#666', fontWeight: 500 }}>
-                          <b>Cost:</b> {event.cost || (event.free ? 'Free' : 'Paid')}
+                          <b>Cost:</b> {event.cost}
                         </Typography>
                       </Box>
                       {/* 7. Description */}

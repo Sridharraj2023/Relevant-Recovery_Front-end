@@ -112,8 +112,8 @@ const AdminEventTable = () => {
           break;
         case 'cost':
           // Handle cost sorting - consider free events as 0 cost
-          aValue = a.free ? 0 : (parseFloat(a.cost) || 0);
-          bValue = b.free ? 0 : (parseFloat(b.cost) || 0);
+          aValue = a.cost === 'Free' ? 0 : (parseFloat(a.cost) || 0);
+          bValue = b.cost === 'Free' ? 0 : (parseFloat(b.cost) || 0);
           break;
         default:
           aValue = a[sortBy] || '';
@@ -536,7 +536,7 @@ const AdminEventTable = () => {
                     <TableCell sx={{ verticalAlign: 'middle', maxWidth: 200 }}><b>Description</b></TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', maxWidth: 160 }}><b>Highlights</b></TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', maxWidth: 120 }}><b>Special Gift</b></TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 60 }}><b>Free</b></TableCell>
+                    
                     <TableCell align="center" sx={{ verticalAlign: 'middle', width: 140 }}><b>Actions</b></TableCell>
                   </TableRow>
                 </TableHead>
@@ -563,7 +563,7 @@ const AdminEventTable = () => {
                         <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>{event.time}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 160 }}>{event.place}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>{event.capacity || '-'}</TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>{event.cost || (event.free ? 'Free' : 'Paid')}</TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>{event.cost}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', maxWidth: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{event.desc}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', maxWidth: 160, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                           {event.highlights && event.highlights.length > 0 ? (
@@ -575,7 +575,7 @@ const AdminEventTable = () => {
                           ) : '-'}
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', maxWidth: 120, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{event.specialGift || '-'}</TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 60 }}>{event.free ? 'Yes' : 'No'}</TableCell>
+                        
                         <TableCell align="center" sx={{ verticalAlign: 'middle', width: 140 }}>
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <Button
