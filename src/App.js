@@ -10,6 +10,7 @@ import Events from './components/Events';
 import Admin from './components/Admin';
 import DonationPage from './components/DonationPage';
 import AdminEventTable from './components/AdminEventTable';
+import AdminDonation from './components/AdminDonation';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
       <Routes>
         <Route path="/admin" element={<Admin />} />
         <Route path="/adminevent" element={<AdminEventTable />} />
+        <Route path="/admindonation" element={<AdminDonation />} />
         <Route path="/*" element={
           <>
             <Navbar />

@@ -152,6 +152,14 @@ const AdminDashboard = ({ onLogout }) => {
             <ListItemText primary="Events" />
           </ListItemButton>
         </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/admindonation')}>
+            <ListItemIcon>
+              <EventIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Manage Donations" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
