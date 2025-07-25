@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, Paper, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, AppBar, Toolbar, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton
+  Box, Typography, Button, TextField, Select, MenuItem, FormControl, InputLabel, Paper, Grid, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, AppBar, Toolbar, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, Snackbar, Alert
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -49,16 +49,16 @@ export default function AdminDonation() {
   const [options, setOptions] = useState([]);
   const [form, setForm] = useState({ group: '', label: '', amount: '', type: '', order: 0, active: true });
   const [editingId, setEditingId] = useState(null);
-  const [error, setError] = useState('');
+  const [snackbar, setSnackbar] = useState({ open: false, message: '', severity: 'success' });
 
   const fetchOptions = async () => {
-    try {
-      const res = await axios.get('/api/donation-options');
-      setOptions(res.data);
-    } catch (err) {
-      setError('Failed to fetch donation options');
-    }
-  };
+  try {
+    const res = await axios.get('https://relevant-recovery-back-end.onrender.com/api/donation-options');
+    setOptions(res.data);
+  } catch (err) {
+    setSnackbar({ open: true, message: 'Failed to fetch donation options', severity: 'error' });
+  }
+};
 
   useEffect(() => { fetchOptions(); }, []);
 
@@ -67,20 +67,22 @@ export default function AdminDonation() {
   };
 
   const handleSubmit = async e => {
-    e.preventDefault();
-    try {
-      if (editingId) {
-        await axios.put(`/api/donation-options/${editingId}`, form);
-      } else {
-        await axios.post('/api/donation-options', form);
-      }
-      setForm({ group: '', label: '', amount: '', type: '', order: 0, active: true });
-      setEditingId(null);
-      fetchOptions();
-    } catch (err) {
-      setError('Failed to save donation option');
+  e.preventDefault();
+  try {
+    if (editingId) {
+      await axios.put('https://relevant-recovery-back-end.onrender.com/api/donation-options/' + editingId, form);
+      setSnackbar({ open: true, message: 'Donation option updated successfully!', severity: 'success' });
+    } else {
+      await axios.post('https://relevant-recovery-back-end.onrender.com/api/donation-options', form);
+      setSnackbar({ open: true, message: 'Donation option created successfully!', severity: 'success' });
     }
-  };
+    setForm({ group: '', label: '', amount: '', type: '', order: 0, active: true });
+    setEditingId(null);
+    fetchOptions();
+  } catch (err) {
+    setSnackbar({ open: true, message: 'Failed to save donation option', severity: 'error' });
+  }
+};
 
   const handleEdit = option => {
     setForm({ ...option });
@@ -88,13 +90,14 @@ export default function AdminDonation() {
   };
 
   const handleDelete = async id => {
-    try {
-      await axios.delete(`/api/donation-options/${id}`);
-      fetchOptions();
-    } catch {
-      setError('Failed to delete option');
-    }
-  };
+  try {
+    await axios.delete('https://relevant-recovery-back-end.onrender.com/api/donation-options/' + id);
+    setSnackbar({ open: true, message: 'Donation option deleted successfully!', severity: 'success' });
+    fetchOptions();
+  } catch {
+    setSnackbar({ open: true, message: 'Failed to delete option', severity: 'error' });
+  }
+};
 
   const [mobileOpen, setMobileOpen] = useState(false);
   const navigate = useNavigate();
@@ -194,6 +197,16 @@ export default function AdminDonation() {
         {drawer}
       </Drawer>
       {/* Main Content */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={3000}
+        onClose={() => setSnackbar({ ...snackbar, open: false })}
+        anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+      >
+        <Alert onClose={() => setSnackbar({ ...snackbar, open: false })} severity={snackbar.severity} sx={{ width: '100%' }}>
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <Box component="main" sx={{
         flexGrow: 1,
         p: 3,
@@ -207,7 +220,6 @@ export default function AdminDonation() {
         alignItems: 'stretch'
       }}>
         <Typography variant="h4" sx={{ fontWeight: 700, color: '#181f29', mb: 3 }}>Manage Donation Options</Typography>
-        {error && <Typography color="error">{error}</Typography>}
         <Paper sx={{ p: 2, mb: 3 }}>
           <form onSubmit={handleSubmit}>
             <Grid container spacing={2}>
@@ -285,7 +297,7 @@ export default function AdminDonation() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {options.map(option => (
+              {(Array.isArray(options) ? options : []).map(option => (
                 <TableRow key={option._id}>
                   <TableCell>{option.type}</TableCell>
                   <TableCell>{option.group}</TableCell>
