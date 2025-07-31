@@ -29,7 +29,9 @@ function App() {
             <Navbar />
             <Container maxWidth="xl" disableGutters>
               <Routes>
-                <Route path="/stripe-mock-dashboard" element={<StripeMockDashboard />} />
+                {process.env.NODE_ENV === 'development' && (
+                  <Route path="/stripe-mock-dashboard" element={<StripeMockDashboard />} />
+                )}
                 <Route path="/donation-success" element={<DonationSuccess />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />

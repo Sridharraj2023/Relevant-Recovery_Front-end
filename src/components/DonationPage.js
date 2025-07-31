@@ -15,44 +15,116 @@ import { loadStripe } from '@stripe/stripe-js';
 import { Elements, PaymentElement, useStripe, useElements } from '@stripe/react-stripe-js';
 
 
-
-function CheckoutForm({ clientSecret }) {
+function CheckoutForm({ clientSecret, selectedAmount }) {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const [isStripeReady, setIsStripeReady] = useState(false);
+  const [paymentElementReady, setPaymentElementReady] = useState(false);
+  
+  // Debug logging
+  React.useEffect(() => {
+    console.log('=== Stripe Debug ===');
+    console.log('Stripe:', stripe ? 'Loaded' : 'Loading...');
+    console.log('Elements:', elements ? 'Loaded' : 'Loading...');
+    console.log('Payment Element Ready:', paymentElementReady);
+    console.log('Client Secret:', clientSecret ? 'Present' : 'Missing');
+    console.log('isStripeReady:', isStripeReady);
+    console.log('===================');
+  }, [stripe, elements, paymentElementReady, clientSecret, isStripeReady]);
+  
+  // Check if all requirements are met to enable the Pay button
+  React.useEffect(() => {
+    if (stripe && elements && paymentElementReady && clientSecret) {
+      console.log('All requirements met, enabling Pay button');
+      setIsStripeReady(true);
+    } else {
+      setIsStripeReady(false);
+    }
+  }, [stripe, elements, paymentElementReady, clientSecret]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     if (!stripe || !elements) return;
 
-    const { error } = await stripe.confirmPayment({
-  elements,
-  confirmParams: {
-    return_url: window.location.origin + '/donation-success',
-  },
-});
+    setIsProcessing(true);
+    setError(null);
 
-    if (error) {
-      setError(error.message);
-    } else {
-      // Payment succeeded!
+    try {
+      const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: `${window.location.origin}/donation-success`,
+        },
+        redirect: 'if_required',
+      });
+      
+      if (paymentIntent && paymentIntent.status === 'succeeded') {
+        // Redirect to success page with payment intent ID and amount
+        window.location.href = `/donation-success?payment_intent=${paymentIntent.id}&amount=${selectedAmount * 100}`;
+        return;
+      }
+
+      if (stripeError) {
+        setError(stripeError.message);
+      }
+    } catch (err) {
+      setError(err.message || 'An error occurred while processing your payment.');
+    } finally {
+      setIsProcessing(false);
     }
+  };
+
+  // Handle PaymentElement ready state
+  const handleReady = () => {
+    console.log('PaymentElement ready');
+    setPaymentElementReady(true);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement />
+      <PaymentElement onReady={handleReady} options={{
+        fields: {
+          billingDetails: 'auto'
+        },
+        layout: {
+          type: 'tabs',
+          defaultCollapsed: false
+        }
+      }} />
       <Button
         type="submit"
         variant="contained"
         color="primary"
         fullWidth
-        sx={{ mt: 2, borderRadius: 999, fontWeight: 700 }}
-        disabled={!stripe}
+        sx={{ 
+          mt: 3, 
+          mb: 2,
+          p: 1.5,
+          fontSize: '1.1rem',
+          borderRadius: 999, 
+          fontWeight: 700,
+          background: 'linear-gradient(90deg, #0ba98d 0%, #0893b2 100%)',
+          '&:hover': {
+            background: 'linear-gradient(90deg, #089e8e 0%, #0791b0 100%)',
+            opacity: 0.95,
+            boxShadow: 'none',
+          },
+          '&.Mui-disabled': {
+            background: '#e0e0e0',
+            color: '#a0a0a0'
+          }
+        }}
+        disabled={!isStripeReady || isProcessing || !clientSecret}
       >
-        Pay
+        {isProcessing ? 'Processing...' : `Pay $${Number(selectedAmount).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`}
       </Button>
-      {error && <div>{error}</div>}
+      {error && (
+        <Typography color="error" sx={{ mt: 2, textAlign: 'center', fontSize: '0.9rem' }}>
+          {error}
+        </Typography>
+      )}
     </form>
   );
 }
@@ -120,16 +192,33 @@ export default function DonationPage() {
       setLoading(false);
     }
   };
-  const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY || '');
-
+  // Initialize Stripe with your publishable key
+  const stripePromise = React.useMemo(() => {
+    const key = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+    if (!key) {
+      console.error('Stripe publishable key is not set. Please check your .env file for REACT_APP_STRIPE_PUBLIC_KEY');
+      return null;
+    }
+    console.log('Initializing Stripe with key:', key.substring(0, 12) + '...');
+    return loadStripe(key);
+  }, []);
+  
   const appearance = {
-    theme: 'flat', // or 'stripe', 'night', 'none'
+    theme: 'stripe',
     variables: {
       colorPrimary: '#089e8e',
-      colorBackground: '#fff',
-      colorText: '#181f29',
-      borderRadius: '8px',
-      // ...more variables for fine-tuning
+      colorBackground: '#ffffff',
+      colorText: '#30313d',
+      colorDanger: '#df1b41',
+      fontFamily: 'Arial, sans-serif',
+      spacingUnit: '4px',
+      borderRadius: '4px'
+    },
+    rules: {
+      '.Input': {
+        border: '1px solid #e6e8eb',
+        borderRadius: '4px'
+      }
     }
   };
 
@@ -262,17 +351,28 @@ export default function DonationPage() {
                   </Typography>
                 </Box>
               </form>
-            ) : (
-              <>
-                <Typography color="primary" sx={{ mb: 2 }}>Donation initiated! Please complete your payment below.</Typography>
-                <Elements stripe={stripePromise} options={{ clientSecret: stripeClientSecret, appearance }}>
-                  <CheckoutForm clientSecret={stripeClientSecret} />
-                </Elements>
-              </>
-            )}
+            ) : stripeClientSecret && stripePromise ? (
+              <Elements 
+                stripe={stripePromise}
+                options={{
+                  clientSecret: stripeClientSecret,
+                  appearance: appearance,
+                  loader: 'auto',
+                  fonts: [{
+                    cssSrc: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap',
+                  }]
+                }}
+                key={stripeClientSecret}
+              >
+                <CheckoutForm 
+                  clientSecret={stripeClientSecret} 
+                  selectedAmount={selectedAmount} 
+                />
+              </Elements>
+            ) : null}
           </Box>
         </Box>
       </Box>
     </Box>
   );
-} 
+}
