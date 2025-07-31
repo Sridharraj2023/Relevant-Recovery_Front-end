@@ -175,6 +175,7 @@ export default function DonationPage() {
         body: JSON.stringify(payload),
       });
       const data = await res.json();
+      console.log('API Response:', data); // Debug log
       if (!res.ok) {
         if (data.errors) {
           setFieldErrors(data.errors);
@@ -184,8 +185,15 @@ export default function DonationPage() {
         }
         return;
       }
-      setSuccess('Donation initiated! Proceed with payment.');
-      setStripeClientSecret(data.stripeClientSecret);
+      
+      if (!data.clientSecret) {
+        console.error('No clientSecret in response:', data);
+        setError('Payment processing error. Please try again.');
+        return;
+      }
+      
+      setSuccess('Donation initiated! Proceeding to payment...');
+      setStripeClientSecret(data.clientSecret);
     } catch (err) {
       setError(err.message || 'Server error');
     } finally {
