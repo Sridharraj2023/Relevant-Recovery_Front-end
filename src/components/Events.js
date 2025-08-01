@@ -278,45 +278,45 @@ const [openEventRegister, setOpenEventRegister] = useState({ open: false, eventI
                       )}
                     </Box>
                     <Button
-  variant="contained"
-  fullWidth
-  sx={{
-    mt: 2,
-    background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
-    color: '#fff',
-    fontWeight: 700,
-    borderRadius: 999,
-    fontSize: 18,
-    py: 1.2,
-    boxShadow: 'none',
-    textTransform: 'none',
-    ...(event.cost !== 'Free' && { 
-      opacity: 0.7,
-      '&:hover': {
-        cursor: 'not-allowed',
-        opacity: 0.7,
-      }
-    }),
-    '&:hover': {
-      background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
-      opacity: 0.95,
-      boxShadow: 'none',
-      ...(event.cost !== 'Free' && {
-        opacity: 0.7,
-        cursor: 'not-allowed'
-      })
-    },
-  }}
-  onClick={() => {
-    if (event.cost === 'Free') {
-      setOpenEventRegister({ open: true, eventId: event._id });
-    } else {
-      setToast({ open: true, message: 'Ticket booking coming soon!', severity: 'info' });
-    }
-  }}
->
-  {event.cost === 'Free' ? 'Register Now' : 'Book Ticket'}
-</Button>                    
+                      variant="contained"
+                      fullWidth
+                      sx={{
+                        mt: 2,
+                        background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
+                        color: '#fff',
+                        fontWeight: 700,
+                        borderRadius: 999,
+                        fontSize: 18,
+                        py: 1.2,
+                        boxShadow: 'none',
+                        textTransform: 'none',
+                        ...(event.cost !== 'Free' && { 
+                          opacity: 0.7,
+                          '&:hover': {
+                            cursor: 'not-allowed',
+                            opacity: 0.7,
+                          }
+                        }),
+                        '&:hover': {
+                          background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
+                          opacity: 0.95,
+                          boxShadow: 'none',
+                          ...(event.cost !== 'Free' && {
+                            cursor: 'not-allowed',
+                            opacity: 0.7
+                          })
+                        }
+                      }}
+                      onClick={() => {
+                        if (event.cost === 'Free') {
+                          setOpenEventRegister({ open: true, eventId: event._id });
+                        } else {
+                          window.location.href = `/book-event/${event._id}`;
+                        }
+                      }}
+                    >
+                      {event.cost === 'Free' ? 'Register Now' : 'Book Ticket'}
+                    </Button>
                   </Box>
                 </Box>
               </Grid>
