@@ -44,6 +44,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
     image: '',
     capacity: '',
     cost: '',
+    ticketCost: '', // New field for ticket cost
     highlights: '',
     specialGift: ''
   });
@@ -97,6 +98,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         image: event.image || '',
         capacity: event.capacity || '',
         cost: event.cost || '',
+        ticketCost: event.cost && event.cost !== 'Free' ? event.cost.replace(/[^0-9.]/g, '') : '', // Extract number from cost string
         highlights: highlightsArr.length ? highlightsArr : [''],
         specialGift: event.specialGift || ''
       });
@@ -112,6 +114,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         image: '',
         capacity: '',
         cost: '',
+        ticketCost: '', // Initialize ticketCost
         highlights: [''],
         specialGift: ''
       });
@@ -144,6 +147,21 @@ const EventForm = ({ open, event, onClose, onSave }) => {
     e.preventDefault();
     setLoading(true);
     setError('');
+    
+    // Validate form data
+    if (!formData.title || !formData.date || !formData.startTime || !formData.place || !formData.desc || !formData.actionType) {
+      setError('Please fill in all required fields');
+      setLoading(false);
+      return;
+    }
+    
+    // Validate ticket cost for paid events
+    if (formData.cost === 'Paid' && (!formData.ticketCost || formData.ticketCost <= 0)) {
+      setError('Please enter a valid ticket cost for paid events');
+      setLoading(false);
+      return;
+    }
+    
     try {
       const token = localStorage.getItem('adminToken');
       const url = event 
@@ -158,7 +176,16 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         : formData.startTime;
       form.append('time', combinedTime);
       form.append('place', formData.place); // was formData.location
-      form.append('cost', formData.cost);
+      
+      // Handle cost field based on event type
+      if (formData.cost === 'Free') {
+        form.append('cost', 'Free');
+      } else if (formData.cost === 'Paid' && formData.ticketCost) {
+        form.append('cost', `$${formData.ticketCost}`);
+      } else if (formData.cost === 'Paid' && !formData.ticketCost) {
+        throw new Error('Ticket cost is required for paid events');
+      }
+      
       form.append('capacity', formData.capacity);
       form.append('desc', formData.desc);
       if (formData.image && formData.image instanceof File) {
@@ -167,7 +194,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
       form.append('highlights', JSON.stringify(formData.highlights.filter(h => h && h.trim() !== '')));
       form.append('specialGift', formData.specialGift);
       form.append('actionType', formData.actionType); // was formData.action
-      // Free status is now determined by cost field: cost === "Free" means free event
+      
       const response = await fetch(url, {
         method: event ? 'PUT' : 'POST',
         headers: {
@@ -364,7 +391,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                   <TextField
                     fullWidth
                     select
-                    label="Cost"
+                    label="Event Type"
                     name="cost"
                     value={formData.cost}
                     onChange={handleChange}
@@ -372,6 +399,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                     variant="outlined"
                     size="medium"
                     margin="dense"
+                    helperText="Select whether this is a free or paid event"
                     SelectProps={{
                       native: false,
                       MenuProps: {
@@ -387,12 +415,46 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                         }
                       }
                     }}
+                    sx={{
+                      '& .MuiFormHelperText-root': {
+                        fontSize: '12px',
+                        color: 'text.secondary'
+                      }
+                    }}
                   >
-                    <MenuItem value="">Select</MenuItem>
-                    <MenuItem value="Free">Free</MenuItem>
-                    <MenuItem value="Paid">Paid</MenuItem>
+                    <MenuItem value="">Select Event Type</MenuItem>
+                    <MenuItem value="Free">Free Event</MenuItem>
+                    <MenuItem value="Paid">Paid Event</MenuItem>
                   </TextField>
                 </Grid>
+                {/* Ticket Cost (only for Paid events) */}
+                {formData.cost === 'Paid' && (
+                  <Grid item xs={12} md={6} sx={{ width: '100%' }}>
+                    <TextField
+                      fullWidth
+                      label="Ticket Cost"
+                      name="ticketCost"
+                      value={formData.ticketCost}
+                      onChange={handleChange}
+                      required
+                      variant="outlined"
+                      size="medium"
+                      margin="dense"
+                      type="number"
+                      placeholder="e.g., 25"
+                      helperText="Enter the ticket price in dollars"
+                      InputProps={{
+                        startAdornment: <Box sx={{ mr: 1, color: 'text.secondary' }}>$</Box>,
+                      }}
+                      sx={{
+                        '& .MuiFormHelperText-root': {
+                          fontSize: '12px',
+                          color: 'text.secondary'
+                        }
+                      }}
+                    />
+                  </Grid>
+                )}
                 {/* Capacity */}
                 <Grid item xs={12} md={6} sx={{ width: '100%' }}>
                   <TextField

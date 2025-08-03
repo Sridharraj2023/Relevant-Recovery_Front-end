@@ -12,6 +12,8 @@ import DonationPage from './components/DonationPage';
 import AdminEventTable from './components/AdminEventTable';
 import AdminDonation from './components/AdminDonation';
 import StripeMockDashboard from './components/StripeMockDashboard';
+import EventBookingPage from './pages/EventBookingPage';
+import BookingConfirmationPage from './pages/BookingConfirmationPage';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import DonationSuccess from './components/DonationSuccess';
 
@@ -33,6 +35,8 @@ function App() {
                   <Route path="/stripe-mock-dashboard" element={<StripeMockDashboard />} />
                 )}
                 <Route path="/donation-success" element={<DonationSuccess />} />
+                <Route path="/book-event/:eventId" element={<EventBookingPage />} />
+                <Route path="/booking-confirmation/:ticketId" element={<BookingConfirmationPage />} />
                 <Route path="/" element={<Home />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/services" element={<Services />} />

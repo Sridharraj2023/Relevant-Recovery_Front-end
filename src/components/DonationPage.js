@@ -30,13 +30,21 @@ function CheckoutForm({ clientSecret, selectedAmount }) {
     console.log('Elements:', elements ? 'Loaded' : 'Loading...');
     console.log('Payment Element Ready:', paymentElementReady);
     console.log('Client Secret:', clientSecret ? 'Present' : 'Missing');
+    console.log('Client Secret Format:', clientSecret ? clientSecret.substring(0, 20) + '...' : 'None');
     console.log('isStripeReady:', isStripeReady);
     console.log('===================');
   }, [stripe, elements, paymentElementReady, clientSecret, isStripeReady]);
   
   // Check if all requirements are met to enable the Pay button
   React.useEffect(() => {
-    if (stripe && elements && paymentElementReady && clientSecret) {
+    console.log('Checking requirements:');
+    console.log('- Stripe:', !!stripe);
+    console.log('- Elements:', !!elements);
+    console.log('- PaymentElement Ready:', paymentElementReady);
+    console.log('- Client Secret:', !!clientSecret);
+    console.log('- Client Secret Valid:', clientSecret ? clientSecret.startsWith('pi_') && clientSecret.includes('_secret_') : false);
+    
+    if (stripe && elements && paymentElementReady && clientSecret && clientSecret.startsWith('pi_') && clientSecret.includes('_secret_')) {
       console.log('All requirements met, enabling Pay button');
       setIsStripeReady(true);
     } else {
@@ -82,17 +90,26 @@ function CheckoutForm({ clientSecret, selectedAmount }) {
     setPaymentElementReady(true);
   };
 
+  // Handle PaymentElement errors
+  const handleError = (error) => {
+    console.error('PaymentElement error:', error);
+  };
+
   return (
     <form onSubmit={handleSubmit}>
-      <PaymentElement onReady={handleReady} options={{
-        fields: {
-          billingDetails: 'auto'
-        },
-        layout: {
-          type: 'tabs',
-          defaultCollapsed: false
-        }
-      }} />
+      <PaymentElement 
+        onReady={handleReady}
+        onError={handleError}
+        options={{
+          fields: {
+            billingDetails: 'auto'
+          },
+          layout: {
+            type: 'tabs',
+            defaultCollapsed: false
+          }
+        }} 
+      />
       <Button
         type="submit"
         variant="contained"
@@ -203,10 +220,18 @@ export default function DonationPage() {
   // Initialize Stripe with your publishable key
   const stripePromise = React.useMemo(() => {
     const key = process.env.REACT_APP_STRIPE_PUBLIC_KEY;
+    console.log('DonationPage - Environment check - REACT_APP_STRIPE_PUBLIC_KEY:', key ? 'Present' : 'Missing');
+    
     if (!key) {
       console.error('Stripe publishable key is not set. Please check your .env file for REACT_APP_STRIPE_PUBLIC_KEY');
       return null;
     }
+    
+    if (!key.startsWith('pk_test_') && !key.startsWith('pk_live_')) {
+      console.error('Invalid Stripe publishable key format. Key should start with pk_test_ or pk_live_');
+      return null;
+    }
+    
     console.log('Initializing Stripe with key:', key.substring(0, 12) + '...');
     return loadStripe(key);
   }, []);

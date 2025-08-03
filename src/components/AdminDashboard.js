@@ -256,9 +256,21 @@ const AdminDashboard = ({ onLogout }) => {
             <Typography variant="h4" sx={{ fontWeight: 700, color: '#181f29', mb: 1 }}>
               Event Management
             </Typography>
-            <Typography variant="body1" sx={{ color: '#666' }}>
+            <Typography variant="body1" sx={{ color: '#666', mb: 2 }}>
               Create and manage events for the Relevant Recovery community
             </Typography>
+            <Button
+              variant="contained"
+              onClick={() => setOpenEventForm(true)}
+              sx={{
+                backgroundColor: '#089e8e',
+                '&:hover': { backgroundColor: '#067e71' },
+                px: 3,
+                py: 1
+              }}
+            >
+              Create New Event
+            </Button>
           </Box>
 
           {/* Stats Cards */}
@@ -291,7 +303,7 @@ const AdminDashboard = ({ onLogout }) => {
               <Card sx={{ bgcolor: '#e6f7f5' }}>
                 <CardContent>
                   <Typography variant="h4" sx={{ color: '#089e8e', fontWeight: 700 }}>
-                    {events.filter(e => e.free).length}
+                    {events.filter(e => e.cost === 'Free').length}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     Free Events
@@ -303,7 +315,7 @@ const AdminDashboard = ({ onLogout }) => {
               <Card sx={{ bgcolor: '#e6f7f5' }}>
                 <CardContent>
                   <Typography variant="h4" sx={{ color: '#089e8e', fontWeight: 700 }}>
-                    {events.filter(e => !e.free).length}
+                    {events.filter(e => e.cost !== 'Free').length}
                   </Typography>
                   <Typography variant="body2" sx={{ color: '#666' }}>
                     Paid Events
