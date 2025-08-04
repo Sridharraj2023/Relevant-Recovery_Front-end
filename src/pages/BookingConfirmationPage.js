@@ -2,10 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { 
   Box, Typography, Button, Paper, 
-  CircularProgress, Alert, Grid
+  CircularProgress, Alert, Divider
 } from '@mui/material';
 import { CheckCircle as CheckCircleIcon } from '@mui/icons-material';
 import axios from 'axios';
+
+// Add print-specific styles
+const printStyles = `
+  @media print {
+    @page { margin: 0; }
+    body { margin: 1.6cm; }
+    header, footer, .no-print { display: none !important; }
+    
+    .print-only { display: block !important; }
+    .MuiPaper-root { 
+      box-shadow: none !important;
+      border: 1px solid #ddd;
+    }
+  }
+  
+  @media screen {
+    .print-only { display: none; }
+  }
+`;
 
 const BookingConfirmationPage = () => {
   const { ticketId } = useParams();
@@ -68,111 +87,234 @@ const BookingConfirmationPage = () => {
     if (ticketId) fetchData();
   }, [ticketId]);
 
-  if (loading) return <CircularProgress sx={{ display: 'block', m: 'auto', mt: 4 }} />;
+  if (loading) {
+    return (
+      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '60vh' }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+  
   if (error) return <Alert severity="error" sx={{ m: 2 }}>{error}</Alert>;
   if (!booking) return <Alert severity="warning" sx={{ m: 2 }}>Booking not found</Alert>;
 
   return (
-    <Box sx={{ maxWidth: 800, mx: 'auto', p: 3 }}>
-      <Box sx={{ textAlign: 'center', mb: 4 }}>
-        <CheckCircleIcon sx={{ fontSize: 80, color: 'success.main', mb: 2 }} />
-        <Typography variant="h4" sx={{ mb: 2, fontWeight: 700 }}>Booking Confirmed!</Typography>
-        <Typography color="text.secondary">
-          A confirmation has been sent to {booking.customer?.email}
-        </Typography>
-      </Box>
+    <>
+      <style>{printStyles}</style>
+      <Box sx={{ maxWidth: 600, mx: 'auto', my: 8, px: 2 }} className="no-print">
+        <Paper elevation={3} sx={{ p: 4, textAlign: 'center' }}>
+          <CheckCircleIcon color="success" sx={{ fontSize: 80, mb: 2 }} />
+          <Typography variant="h4" sx={{ fontWeight: 700, mb: 2, color: 'success.main' }}>
+            Booking Confirmed!
+          </Typography>
+          
+          <Typography variant="body1" sx={{ mb: 4 }}>
+            Your event ticket has been successfully booked. Here's your booking confirmation:
+          </Typography>
 
-      <Paper sx={{ p: 3, mb: 4, borderRadius: 2 }}>
-        <Grid container spacing={4}>
-          <Grid item xs={12} md={6}>
-            <Typography variant="h6" sx={{ mb: 2 }}>Booking Details</Typography>
-            <Typography variant="body2" color="text.secondary">Reference</Typography>
-            <Typography sx={{ mb: 2 }}>{booking.referenceNumber}</Typography>
+          <Box sx={{ 
+            textAlign: 'left', 
+            bgcolor: 'grey.50', 
+            p: 3, 
+            borderRadius: 2,
+            mb: 4
+          }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Booking Details</Typography>
+            <Divider sx={{ mb: 2 }} />
             
-            <Typography variant="body2" color="text.secondary">Status</Typography>
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-              <Box sx={{ width: 10, height: 10, bgcolor: 'success.main', borderRadius: '50%', mr: 1 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Reference Number:</Typography>
+              <Typography fontWeight="bold">{booking.referenceNumber}</Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Status:</Typography>
               <Typography sx={{ textTransform: 'capitalize' }}>{booking.status}</Typography>
             </Box>
             
-            <Typography variant="body2" color="text.secondary">Tickets</Typography>
-            <Typography>{booking.quantity} ticket{booking.quantity > 1 ? 's' : ''}</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Tickets:</Typography>
+              <Typography>{booking.quantity} ticket{booking.quantity > 1 ? 's' : ''}</Typography>
+            </Box>
             
-            {/* Payment Information */}
-            <Box sx={{ mt: 3, p: 2, bgcolor: 'grey.50', borderRadius: 2 }}>
-              <Typography variant="h6" sx={{ mb: 2, color: 'primary.main' }}>Payment Receipt</Typography>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Amount:</Typography>
+              <Typography fontWeight="bold">${(booking.totalAmount / 100).toFixed(2)}</Typography>
+            </Box>
+            
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Date:</Typography>
+              <Typography>{new Date(booking.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</Typography>
+            </Box>
+            
+            {booking.paymentIntentId && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography>Transaction ID:</Typography>
+                <Typography sx={{ 
+                  fontFamily: 'monospace',
+                  fontSize: '0.8rem',
+                  wordBreak: 'break-word',
+                  textAlign: 'right',
+                  maxWidth: '60%'
+                }}>
+                  {booking.paymentIntentId}
+                </Typography>
+              </Box>
+            )}
+          </Box>
+
+          {event && (
+            <Box sx={{ 
+              textAlign: 'left', 
+              bgcolor: 'grey.50', 
+              p: 3, 
+              borderRadius: 2,
+              mb: 4
+            }}>
+              <Typography variant="subtitle1" sx={{ fontWeight: 600, mb: 2 }}>Event Details</Typography>
+              <Divider sx={{ mb: 2 }} />
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2" color="text.secondary">Amount:</Typography>
-                <Typography variant="body1" sx={{ fontWeight: 600 }}>
-                  ${(booking.totalAmount / 100).toFixed(2)}
-                </Typography>
+                <Typography>Event:</Typography>
+                <Typography fontWeight="bold">{event.title}</Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2" color="text.secondary">Date:</Typography>
-                <Typography variant="body1">
-                  {new Date(booking.createdAt).toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit'
-                  })}
-                </Typography>
-              </Box>
-              
-              {booking.paymentIntentId && (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                  <Typography variant="body2" color="text.secondary">Transaction ID:</Typography>
-                  <Typography sx={{ fontFamily: 'monospace', fontSize: '0.9rem' }}>
-                    {booking.paymentIntentId}
-                  </Typography>
-                </Box>
-              )}
-              
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2" color="text.secondary">Payment Method:</Typography>
-                <Typography variant="body1" sx={{ textTransform: 'capitalize' }}>
-                  {booking.paymentMethod || 'Card'}
-                </Typography>
+                <Typography>Date & Time:</Typography>
+                <Typography>{event.date} • {event.time}</Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
-                <Typography variant="body2" color="text.secondary">Currency:</Typography>
-                <Typography variant="body1" sx={{ textTransform: 'uppercase' }}>
-                  {booking.currency || 'USD'}
-                </Typography>
+                <Typography>Location:</Typography>
+                <Typography>{event.place}</Typography>
+              </Box>
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography>Attendee:</Typography>
+                <Typography>{booking.customer?.name}</Typography>
+              </Box>
+              
+              <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                <Typography>Email:</Typography>
+                <Typography>{booking.customer?.email}</Typography>
               </Box>
             </Box>
-          </Grid>
+          )}
+
+          <Typography variant="body2" sx={{ mb: 3, fontStyle: 'italic' }}>
+            A confirmation has been sent to {booking.customer?.email}.
+          </Typography>
           
-          <Grid item xs={12} md={6}>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', flexWrap: 'wrap' }}>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              onClick={() => navigate('/events')}
+              sx={{ minWidth: 180 }}
+            >
+              Back to Events
+            </Button>
+            <Button 
+              variant="outlined" 
+              color="primary" 
+              onClick={() => window.print()}
+              sx={{ minWidth: 180 }}
+            >
+              Print Ticket
+            </Button>
+          </Box>
+        </Paper>
+      </Box>
+      
+      {/* Print View */}
+      <Box sx={{ display: 'none' }} className="print-only">
+        <Box sx={{ textAlign: 'center', mb: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2 }}>Event Ticket Receipt</Typography>
+          <Typography variant="body2" sx={{ mb: 2 }}>
+            {new Date().toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            })}
+          </Typography>
+        </Box>
+        
+        <Box sx={{ mb: 4 }}>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Thank you for booking your event ticket. Your payment of <strong>${(booking.totalAmount / 100).toFixed(2)}</strong> has been processed successfully.
+          </Typography>
+          
+          <Box sx={{ mt: 3, border: '1px solid #ddd', p: 2, borderRadius: 1 }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 'bold', mb: 1 }}>BOOKING DETAILS</Typography>
+            <Divider sx={{ mb: 2 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Reference Number:</Typography>
+              <Typography fontWeight="bold">{booking.referenceNumber}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Amount:</Typography>
+              <Typography fontWeight="bold">${(booking.totalAmount / 100).toFixed(2)}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Typography>Date:</Typography>
+              <Typography>{new Date(booking.createdAt).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}</Typography>
+            </Box>
+            {booking.paymentIntentId && (
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Typography>Transaction ID:</Typography>
+                <Typography sx={{ fontFamily: 'monospace', fontSize: '0.8rem' }}>
+                  {booking.paymentIntentId}
+                </Typography>
+              </Box>
+            )}
             {event && (
               <>
-                <Typography variant="h6" sx={{ mb: 2 }}>Event Details</Typography>
-                <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>{event.title}</Typography>
-                <Typography color="text.secondary">{event.date} • {event.time}</Typography>
-                <Typography color="text.secondary" sx={{ mb: 2 }}>{event.place}</Typography>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Event:</Typography>
+                  <Typography fontWeight="bold">{event.title}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Date & Time:</Typography>
+                  <Typography>{event.date} • {event.time}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Location:</Typography>
+                  <Typography>{event.place}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                  <Typography>Attendee:</Typography>
+                  <Typography>{booking.customer?.name}</Typography>
+                </Box>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <Typography>Email:</Typography>
+                  <Typography>{booking.customer?.email}</Typography>
+                </Box>
               </>
             )}
-            
-            <Typography variant="body2" color="text.secondary">Attendee</Typography>
-            <Typography>{booking.customer?.name}</Typography>
-            <Typography color="text.secondary">{booking.customer?.email}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-      
-      <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-        <Button variant="outlined" onClick={() => navigate('/events')}>
-          Back to Events
-        </Button>
-        <Button variant="contained" onClick={() => window.print()}>
-          Print Ticket
-        </Button>
+          </Box>
+        </Box>
+        
+        <Box sx={{ mt: 4, textAlign: 'center' }}>
+          <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
+            This is an official receipt for your event ticket. Please keep this for your records!
+          </Typography>
+        </Box>
       </Box>
-    </Box>
+    </>
   );
 };
 

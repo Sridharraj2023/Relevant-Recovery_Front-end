@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert as MuiAlert, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, TablePagination, TableSortLabel, Stack, Divider
 } from '@mui/material';
-import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Menu as MenuIcon, Dashboard as DashboardIcon, Event as EventIcon, Logout as LogoutIcon, Search as SearchIcon, FilterList as FilterIcon, Upload as UploadIcon, Clear as ClearIcon, GetApp as ExportIcon, Sort as SortIcon } from '@mui/icons-material';
+import { Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Menu as MenuIcon, Dashboard as DashboardIcon, Event as EventIcon, Logout as LogoutIcon, Search as SearchIcon, FilterList as FilterIcon, Upload as UploadIcon, Clear as ClearIcon, GetApp as ExportIcon, Sort as SortIcon, AttachMoney as MoneyIcon, ConfirmationNumber as TicketIcon } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import EventForm from './EventForm';
 
@@ -284,9 +284,25 @@ const AdminEventTable = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={() => navigate('/admindonation')}>
             <ListItemIcon>
-              <EventIcon sx={{ color: '#089e8e' }} />
+              <MoneyIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
             <ListItemText primary="Manage Donations" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/admindonation-records')}>
+            <ListItemIcon>
+              <MoneyIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Donation Records" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/adminticket-bookings')}>
+            <ListItemIcon>
+              <TicketIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Ticket Bookings" />
           </ListItemButton>
         </ListItem>
       </List>

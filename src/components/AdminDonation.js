@@ -7,6 +7,8 @@ import EditIcon from '@mui/icons-material/Edit';
 import MenuIcon from '@mui/icons-material/Menu';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import EventIcon from '@mui/icons-material/Event';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import ConfirmationNumberIcon from '@mui/icons-material/ConfirmationNumber';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
@@ -131,9 +133,25 @@ export default function AdminDonation() {
         <ListItem disablePadding>
           <ListItemButton onClick={() => navigate('/admindonation')}>
             <ListItemIcon>
-              <EventIcon sx={{ color: '#089e8e' }} />
+              <AttachMoneyIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
             <ListItemText primary="Manage Donations" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/admindonation-records')}>
+            <ListItemIcon>
+              <AttachMoneyIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Donation Records" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/adminticket-bookings')}>
+            <ListItemIcon>
+              <ConfirmationNumberIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Ticket Bookings" />
           </ListItemButton>
         </ListItem>
       </List>
