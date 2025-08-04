@@ -13,6 +13,7 @@ import AdminEventTable from './components/AdminEventTable';
 import AdminDonation from './components/AdminDonation';
 import AdminDonationTable from './components/AdminDonationTable';
 import AdminTicketBookingTable from './components/AdminTicketBookingTable';
+import AdminRegistrationTable from './components/AdminRegistrationTable';
 import StripeMockDashboard from './components/StripeMockDashboard';
 import EventBookingPage from './pages/EventBookingPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
@@ -29,6 +30,7 @@ function App() {
         <Route path="/adminevent" element={<AdminEventTable />} />
         <Route path="/admindonation" element={<AdminDonation />} />
         <Route path="/admindonation-records" element={<AdminDonationTable />} />
+        <Route path="/adminregistrations" element={<AdminRegistrationTable />} />
         <Route path="/adminticket-bookings" element={<AdminTicketBookingTable />} />
         <Route path="/*" element={
           <>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert as MuiAlert, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, TablePagination, TableSortLabel, Stack, Divider, Chip
+  Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert as MuiAlert, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, TablePagination, TableSortLabel, Stack, Divider
 } from '@mui/material';
 import { 
   Delete as DeleteIcon, Menu as MenuIcon, 
@@ -13,19 +13,18 @@ import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
-const AdminDonationTable = () => {
-  const [donations, setDonations] = useState([]);
-  const [filteredDonations, setFilteredDonations] = useState([]);
+const AdminRegistrationTable = () => {
+  const [registrations, setRegistrations] = useState([]);
+  const [filteredRegistrations, setFilteredRegistrations] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [deleteDialog, setDeleteDialog] = useState({ open: false, donationId: null });
+  const [deleteDialog, setDeleteDialog] = useState({ open: false, registrationId: null });
   const [toast, setToast] = useState({ open: false, message: '', severity: 'success' });
   const [mobileOpen, setMobileOpen] = useState(false);
 
   // Enhanced features state
   const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState('all');
-  const [filterAmount, setFilterAmount] = useState('all');
+  const [filterEvent, setFilterEvent] = useState('all');
   const [sortBy, setSortBy] = useState('date');
   const [sortOrder, setSortOrder] = useState('desc');
   const [page, setPage] = useState(0);
@@ -34,45 +33,28 @@ const AdminDonationTable = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchDonations();
+    fetchRegistrations();
   }, []);
 
-  // Filter and search donations
+  // Filter and search registrations
   useEffect(() => {
-    let filtered = [...donations];
+    let filtered = [...registrations];
 
     // Apply search filter
     if (searchTerm) {
-      filtered = filtered.filter(donation => 
-        `${donation.firstName || ''} ${donation.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donation.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donation.stripePaymentIntentId?.toLowerCase().includes(searchTerm.toLowerCase())
+      filtered = filtered.filter(registration => 
+        registration.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registration.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registration.city?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        registration.state?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
-    // Apply status filter
-    if (filterStatus !== 'all') {
-      filtered = filtered.filter(donation => {
-        if (filterStatus === 'completed') return donation.status === 'completed';
-        if (filterStatus === 'pending') return donation.status === 'pending';
-        if (filterStatus === 'failed') return donation.status === 'failed';
-        if (filterStatus === 'processing') return donation.status === 'processing';
-        return true;
-      });
-    }
-
-    // Apply amount filter
-    if (filterAmount !== 'all') {
-      filtered = filtered.filter(donation => {
-        const amount = donation.amount; // Amount is already in dollars
-        switch (filterAmount) {
-          case 'small': return amount < 50;
-          case 'medium': return amount >= 50 && amount < 200;
-          case 'large': return amount >= 200 && amount < 1000;
-          case 'major': return amount >= 1000;
-          default: return true;
-        }
-      });
+    // Apply event filter
+    if (filterEvent !== 'all') {
+      filtered = filtered.filter(registration => 
+        registration.event?._id === filterEvent || registration.event === filterEvent
+      );
     }
 
     // Apply sorting
@@ -81,24 +63,20 @@ const AdminDonationTable = () => {
 
       switch (sortBy) {
         case 'name':
-          aValue = `${a.firstName || ''} ${a.lastName || ''}`.toLowerCase();
-          bValue = `${b.firstName || ''} ${b.lastName || ''}`.toLowerCase();
+          aValue = (a.name || '').toLowerCase();
+          bValue = (b.name || '').toLowerCase();
           break;
         case 'email':
           aValue = (a.email || '').toLowerCase();
           bValue = (b.email || '').toLowerCase();
           break;
-        case 'amount':
-          aValue = a.amount || 0;
-          bValue = b.amount || 0;
+        case 'city':
+          aValue = (a.city || '').toLowerCase();
+          bValue = (b.city || '').toLowerCase();
           break;
         case 'date':
           aValue = new Date(a.createdAt);
           bValue = new Date(b.createdAt);
-          break;
-        case 'status':
-          aValue = (a.status || '').toLowerCase();
-          bValue = (b.status || '').toLowerCase();
           break;
         default:
           aValue = a[sortBy] || '';
@@ -112,23 +90,32 @@ const AdminDonationTable = () => {
       return 0;
     });
 
-    setFilteredDonations(filtered);
+    setFilteredRegistrations(filtered);
     setPage(0); // Reset to first page when filters change
-  }, [donations, searchTerm, filterStatus, filterAmount, sortBy, sortOrder]);
+  }, [registrations, searchTerm, filterEvent, sortBy, sortOrder]);
 
-  const fetchDonations = async () => {
+  const fetchRegistrations = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch('https://relevant-recovery-back-end.onrender.com/api/donations', {
+      
+      if (!token) {
+        throw new Error('No admin token found. Please login again.');
+      }
+
+      const response = await fetch('https://relevant-recovery-back-end.onrender.com/api/registration/admin', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
+
       if (!response.ok) {
-        throw new Error('Failed to fetch donations');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch registrations');
       }
+
       const data = await response.json();
-      setDonations(data);
+      setRegistrations(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -150,11 +137,7 @@ const AdminDonationTable = () => {
   };
 
   const handleFilterChange = (event) => {
-    setFilterStatus(event.target.value);
-  };
-
-  const handleAmountFilterChange = (event) => {
-    setFilterAmount(event.target.value);
+    setFilterEvent(event.target.value);
   };
 
   const handlePageChange = (event, newPage) => {
@@ -168,41 +151,40 @@ const AdminDonationTable = () => {
 
   const clearFilters = () => {
     setSearchTerm('');
-    setFilterStatus('all');
-    setFilterAmount('all');
+    setFilterEvent('all');
     setSortBy('date');
     setSortOrder('desc');
   };
 
-  const handleExportDonations = () => {
-    const dataStr = JSON.stringify(filteredDonations, null, 2);
+  const handleExportRegistrations = () => {
+    const dataStr = JSON.stringify(filteredRegistrations, null, 2);
     const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    const exportFileDefaultName = `donations_export_${new Date().toISOString().split('T')[0]}.json`;
+    const exportFileDefaultName = `registrations_export_${new Date().toISOString().split('T')[0]}.json`;
     const linkElement = document.createElement('a');
     linkElement.setAttribute('href', dataUri);
     linkElement.setAttribute('download', exportFileDefaultName);
     linkElement.click();
-    setToast({ open: true, message: 'Donations exported successfully!', severity: 'success' });
+    setToast({ open: true, message: 'Registrations exported successfully!', severity: 'success' });
   };
 
-  const handleDeleteDonation = async () => {
+  const handleDeleteRegistration = async () => {
     try {
       const token = localStorage.getItem('adminToken');
-      const response = await fetch(`https://relevant-recovery-back-end.onrender.com/api/donations/${deleteDialog.donationId}`, {
+      const response = await fetch(`https://relevant-recovery-back-end.onrender.com/api/registration/${deleteDialog.registrationId}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${token}`
         }
       });
       if (!response.ok) {
-        throw new Error('Failed to delete donation');
+        throw new Error('Failed to delete registration');
       }
-      setDonations(donations.filter(donation => donation._id !== deleteDialog.donationId));
-      setDeleteDialog({ open: false, donationId: null });
-      setToast({ open: true, message: 'Donation deleted successfully!', severity: 'success' });
+      setRegistrations(registrations.filter(registration => registration._id !== deleteDialog.registrationId));
+      setDeleteDialog({ open: false, registrationId: null });
+      setToast({ open: true, message: 'Registration deleted successfully!', severity: 'success' });
     } catch (err) {
       setError(err.message);
-      setToast({ open: true, message: 'Failed to delete donation', severity: 'error' });
+      setToast({ open: true, message: 'Failed to delete registration', severity: 'error' });
     }
   };
 
@@ -218,24 +200,6 @@ const AdminDonationTable = () => {
     localStorage.removeItem('adminToken');
     localStorage.removeItem('adminUser');
     navigate('/admin');
-  };
-
-  const getStatusColor = (status) => {
-    switch (status) {
-      case 'completed': return 'success';
-      case 'processing': return 'warning';
-      case 'pending': return 'info';
-      case 'failed': return 'error';
-      default: return 'default';
-    }
-  };
-
-  const getAmountColor = (amount) => {
-    const amountInDollars = amount; // Amount is already in dollars
-    if (amountInDollars >= 1000) return '#d32f2f';
-    if (amountInDollars >= 200) return '#1976d2';
-    if (amountInDollars >= 50) return '#388e3c';
-    return '#666';
   };
 
   const drawer = (
@@ -377,13 +341,13 @@ const AdminDonationTable = () => {
           mt: 8
         }}
       >
-        {/* Donation Table Section */}
+        {/* Registration Table Section */}
         <Box sx={{ mt: 0 }}>
           <Typography variant="h4" sx={{ fontWeight: 700, color: '#181f29', mb: 1 }}>
-            Donation Records
+            Event Registrations
           </Typography>
           <Typography variant="body1" sx={{ color: '#666', mb: 4 }}>
-            View and manage all donation payment records from our generous supporters
+            View and manage all event registrations from our community members
           </Typography>
           
           {/* Action Buttons */}
@@ -391,11 +355,11 @@ const AdminDonationTable = () => {
             <Button
               variant="outlined"
               startIcon={<ExportIcon />}
-              onClick={handleExportDonations}
-              disabled={filteredDonations.length === 0}
+              onClick={handleExportRegistrations}
+              disabled={filteredRegistrations.length === 0}
               sx={{ borderColor: '#089e8e', color: '#089e8e', '&:hover': { borderColor: '#067e71', backgroundColor: '#f0fffe' } }}
             >
-              Export Donations
+              Export Registrations
             </Button>
           </Stack>
 
@@ -403,7 +367,7 @@ const AdminDonationTable = () => {
           <Paper sx={{ p: 2, mb: 3, backgroundColor: '#f8f9fa', width: '100%' }}>
             <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} alignItems="stretch" sx={{ width: '100%' }}>
               <TextField
-                placeholder="Search donations..."
+                placeholder="Search registrations..."
                 value={searchTerm}
                 onChange={handleSearchChange}
                 size="small"
@@ -417,33 +381,15 @@ const AdminDonationTable = () => {
                 }}
               />
               <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>Filter by Status</InputLabel>
+                <InputLabel>Filter by Event</InputLabel>
                 <Select
-                  value={filterStatus}
+                  value={filterEvent}
                   onChange={handleFilterChange}
-                  label="Filter by Status"
+                  label="Filter by Event"
                   startAdornment={<FilterIcon sx={{ color: '#089e8e', mr: 1 }} />}
                 >
-                  <MenuItem value="all">All Donations</MenuItem>
-                  <MenuItem value="completed">Completed</MenuItem>
-                  <MenuItem value="pending">Pending</MenuItem>
-                  <MenuItem value="processing">Processing</MenuItem>
-                  <MenuItem value="failed">Failed</MenuItem>
-                </Select>
-              </FormControl>
-              <FormControl size="small" sx={{ minWidth: 150 }}>
-                <InputLabel>Filter by Amount</InputLabel>
-                <Select
-                  value={filterAmount}
-                  onChange={handleAmountFilterChange}
-                  label="Filter by Amount"
-                  startAdornment={<MoneyIcon sx={{ color: '#089e8e', mr: 1 }} />}
-                >
-                  <MenuItem value="all">All Amounts</MenuItem>
-                  <MenuItem value="small">Small (&lt;$50)</MenuItem>
-                  <MenuItem value="medium">Medium ($50-$199)</MenuItem>
-                  <MenuItem value="large">Large ($200-$999)</MenuItem>
-                  <MenuItem value="major">Major ($1000+)</MenuItem>
+                  <MenuItem value="all">All Events</MenuItem>
+                  {/* Event options will be populated dynamically */}
                 </Select>
               </FormControl>
               <FormControl size="small" sx={{ minWidth: 180 }}>
@@ -460,14 +406,12 @@ const AdminDonationTable = () => {
                 >
                   <MenuItem value="date-desc">Date (Newest First)</MenuItem>
                   <MenuItem value="date-asc">Date (Oldest First)</MenuItem>
-                  <MenuItem value="amount-desc">Amount (High to Low)</MenuItem>
-                  <MenuItem value="amount-asc">Amount (Low to High)</MenuItem>
                   <MenuItem value="name-asc">Name (A-Z)</MenuItem>
                   <MenuItem value="name-desc">Name (Z-A)</MenuItem>
                   <MenuItem value="email-asc">Email (A-Z)</MenuItem>
                   <MenuItem value="email-desc">Email (Z-A)</MenuItem>
-                  <MenuItem value="status-asc">Status (A-Z)</MenuItem>
-                  <MenuItem value="status-desc">Status (Z-A)</MenuItem>
+                  <MenuItem value="city-asc">City (A-Z)</MenuItem>
+                  <MenuItem value="city-desc">City (Z-A)</MenuItem>
                 </Select>
               </FormControl>
               <Button
@@ -481,7 +425,7 @@ const AdminDonationTable = () => {
             </Stack>
             <Divider sx={{ my: 2 }} />
             <Typography variant="body2" color="text.secondary">
-              Showing {filteredDonations.length} of {donations.length} donations
+              Showing {filteredRegistrations.length} of {registrations.length} registrations
             </Typography>
           </Paper>
 
@@ -489,22 +433,22 @@ const AdminDonationTable = () => {
             <MuiAlert severity="error" sx={{ mb: 3 }}>{error}</MuiAlert>
           )}
 
-          {filteredDonations.length > 0 ? (
+          {filteredRegistrations.length > 0 ? (
             <Box sx={{ overflowX: 'auto', maxWidth: '100%', mb: 4 }}>
               <Table sx={{ minWidth: 1200, borderRadius: 2 }}>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 150 }}>
                       <TableSortLabel
                         active={sortBy === 'name'}
                         direction={sortBy === 'name' ? sortOrder : 'asc'}
                         onClick={() => handleSort('name')}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        Donor Name
+                        Name
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 180 }}>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}>
                       <TableSortLabel
                         active={sortBy === 'email'}
                         direction={sortBy === 'email' ? sortOrder : 'asc'}
@@ -515,64 +459,69 @@ const AdminDonationTable = () => {
                       </TableSortLabel>
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                      <b>Phone</b>
+                    </TableCell>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
                       <TableSortLabel
-                        active={sortBy === 'amount'}
-                        direction={sortBy === 'amount' ? sortOrder : 'asc'}
-                        onClick={() => handleSort('amount')}
+                        active={sortBy === 'city'}
+                        direction={sortBy === 'city' ? sortOrder : 'asc'}
+                        onClick={() => handleSort('city')}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        Amount
+                        City
                       </TableSortLabel>
                     </TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                      <b>State</b>
+                    </TableCell>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                      <b>Country</b>
+                    </TableCell>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 150 }}>
                       <TableSortLabel
                         active={sortBy === 'date'}
                         direction={sortBy === 'date' ? sortOrder : 'asc'}
                         onClick={() => handleSort('date')}
                         sx={{ fontWeight: 'bold' }}
                       >
-                        Date
+                        Registration Date
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                      <TableSortLabel
-                        active={sortBy === 'status'}
-                        direction={sortBy === 'status' ? sortOrder : 'asc'}
-                        onClick={() => handleSort('status')}
-                        sx={{ fontWeight: 'bold' }}
-                      >
-                        Status
-                      </TableSortLabel>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}>
+                      <b>Event</b>
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}><b>Organization</b></TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}><b>Transaction ID</b></TableCell>
-                    <TableCell align="center" sx={{ verticalAlign: 'middle', width: 120 }}><b>Actions</b></TableCell>
+                    <TableCell align="center" sx={{ verticalAlign: 'middle', width: 120 }}>
+                      <b>Actions</b>
+                    </TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {filteredDonations
+                  {filteredRegistrations
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((donation, idx) => (
-                      <TableRow key={donation._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                          {`${donation.firstName || ''} ${donation.lastName || ''}`.trim() || 'N/A'}
-                        </TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 180 }}>
-                          {donation.email || 'N/A'}
-                        </TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                          <Typography 
-                            variant="body1" 
-                            sx={{ 
-                              fontWeight: 'bold',
-                              color: getAmountColor(donation.amount)
-                            }}
-                          >
-                            ${donation.amount.toFixed(2)}
+                    .map((registration, idx) => (
+                      <TableRow key={registration._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 150 }}>
+                          <Typography variant="body1" sx={{ fontWeight: 'medium' }}>
+                            {registration.name || 'N/A'}
                           </Typography>
                         </TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 200 }}>
+                          {registration.email || 'N/A'}
+                        </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                          {new Date(donation.createdAt).toLocaleDateString('en-US', {
+                          {registration.phone || 'N/A'}
+                        </TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                          {registration.city || 'N/A'}
+                        </TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                          {registration.state || 'N/A'}
+                        </TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
+                          {registration.country || 'N/A'}
+                        </TableCell>
+                        <TableCell sx={{ verticalAlign: 'middle', width: 150 }}>
+                          {new Date(registration.createdAt).toLocaleDateString('en-US', {
                             year: 'numeric',
                             month: 'short',
                             day: 'numeric',
@@ -580,30 +529,18 @@ const AdminDonationTable = () => {
                             minute: '2-digit'
                           })}
                         </TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                          <Chip 
-                            label={donation.status || 'unknown'} 
-                            size="small" 
-                            color={getStatusColor(donation.status)}
-                            sx={{ textTransform: 'capitalize' }}
-                          />
-                        </TableCell>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {donation.org || '-'}
-                        </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 200 }}>
                           <Typography sx={{ 
-                            fontFamily: 'monospace',
-                            fontSize: '0.8rem',
+                            fontSize: '0.9rem',
                             wordBreak: 'break-word'
                           }}>
-                            {donation.stripePaymentIntentId || 'N/A'}
+                            {registration.event?.title || 'Event not found'}
                           </Typography>
                         </TableCell>
                         <TableCell align="center" sx={{ verticalAlign: 'middle', width: 120 }}>
                           <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                             <IconButton 
-                              onClick={() => setDeleteDialog({ open: true, donationId: donation._id })} 
+                              onClick={() => setDeleteDialog({ open: true, registrationId: registration._id })} 
                               sx={{ color: '#d32f2f' }} 
                               aria-label="delete"
                             >
@@ -619,7 +556,7 @@ const AdminDonationTable = () => {
               {/* Pagination */}
               <TablePagination
                 component="div"
-                count={filteredDonations.length}
+                count={filteredRegistrations.length}
                 page={page}
                 onPageChange={handlePageChange}
                 rowsPerPage={rowsPerPage}
@@ -640,12 +577,12 @@ const AdminDonationTable = () => {
           ) : (
             <Paper sx={{ p: 4, textAlign: 'center' }}>
               <Typography variant="h6" sx={{ color: '#666', mb: 2 }}>
-                {donations.length === 0 ? 'No donations found' : 'No donations match your filters'}
+                {registrations.length === 0 ? 'No registrations found' : 'No registrations match your filters'}
               </Typography>
               <Typography variant="body2" sx={{ color: '#666', mb: 2 }}>
-                {donations.length === 0 ? 'Donations will appear here once they are made' : 'Try adjusting your search or filter criteria'}
+                {registrations.length === 0 ? 'Registrations will appear here once users register for events' : 'Try adjusting your search or filter criteria'}
               </Typography>
-              {donations.length > 0 && (
+              {registrations.length > 0 && (
                 <Button
                   size="small"
                   onClick={clearFilters}
@@ -657,18 +594,18 @@ const AdminDonationTable = () => {
             </Paper>
           )}
 
-          <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false, donationId: null })}>
-            <DialogTitle>Delete Donation</DialogTitle>
+          <Dialog open={deleteDialog.open} onClose={() => setDeleteDialog({ open: false, registrationId: null })}>
+            <DialogTitle>Delete Registration</DialogTitle>
             <DialogContent>
               <Typography>
-                Are you sure you want to delete this donation record? This action cannot be undone.
+                Are you sure you want to delete this registration record? This action cannot be undone.
               </Typography>
             </DialogContent>
             <DialogActions>
-              <Button onClick={() => setDeleteDialog({ open: false, donationId: null })}>
+              <Button onClick={() => setDeleteDialog({ open: false, registrationId: null })}>
                 Cancel
               </Button>
-              <Button onClick={handleDeleteDonation} color="error">
+              <Button onClick={handleDeleteRegistration} color="error">
                 Delete
               </Button>
             </DialogActions>
@@ -694,4 +631,4 @@ const AdminDonationTable = () => {
   );
 }
 
-export default AdminDonationTable; 
+export default AdminRegistrationTable; 

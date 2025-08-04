@@ -33,6 +33,7 @@ import {
   Logout as LogoutIcon,
   AttachMoney as MoneyIcon,
   ConfirmationNumber as TicketIcon,
+  People as PeopleIcon,
   } from '@mui/icons-material';
 import EventForm from './EventForm';
 import { useNavigate } from 'react-router-dom';
@@ -175,6 +176,14 @@ const AdminDashboard = ({ onLogout }) => {
               <MoneyIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
             <ListItemText primary="Donation Records" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/adminregistrations')}>
+            <ListItemIcon>
+              <PeopleIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Event Registrations" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>

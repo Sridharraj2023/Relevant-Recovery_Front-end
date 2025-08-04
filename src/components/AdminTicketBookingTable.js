@@ -3,11 +3,11 @@ import {
   Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert as MuiAlert, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, TablePagination, TableSortLabel, Stack, Divider, Chip
 } from '@mui/material';
 import { 
-  Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Menu as MenuIcon, 
+  Delete as DeleteIcon, Menu as MenuIcon, 
   Dashboard as DashboardIcon, Event as EventIcon, Logout as LogoutIcon, 
   Search as SearchIcon, FilterList as FilterIcon, Clear as ClearIcon, 
-  GetApp as ExportIcon, Sort as SortIcon, Visibility as ViewIcon,
-  AttachMoney as MoneyIcon, ConfirmationNumber as TicketIcon
+  GetApp as ExportIcon, Sort as SortIcon,
+  AttachMoney as MoneyIcon, ConfirmationNumber as TicketIcon, People as PeopleIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
@@ -294,6 +294,14 @@ const AdminTicketBookingTable = () => {
               <MoneyIcon sx={{ color: '#089e8e' }} />
             </ListItemIcon>
             <ListItemText primary="Donation Records" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => navigate('/adminregistrations')}>
+            <ListItemIcon>
+              <PeopleIcon sx={{ color: '#089e8e' }} />
+            </ListItemIcon>
+            <ListItemText primary="Event Registrations" />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding>
