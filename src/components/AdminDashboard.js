@@ -58,14 +58,21 @@ const AdminDashboard = ({ onLogout }) => {
   const fetchEvents = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      
+      if (!token) {
+        throw new Error('No admin token found. Please login again.');
+      }
+
       const response = await fetch('https://relevant-recovery-back-end.onrender.com/api/events/admin', {
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         }
       });
 
       if (!response.ok) {
-        throw new Error('Failed to fetch events');
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.message || 'Failed to fetch events');
       }
 
       const data = await response.json();

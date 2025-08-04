@@ -3,10 +3,10 @@ import {
   Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Typography, Paper, Dialog, DialogTitle, DialogContent, DialogActions, Snackbar, Alert as MuiAlert, AppBar, Toolbar, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText, ListItemButton, TextField, InputAdornment, Select, MenuItem, FormControl, InputLabel, TablePagination, TableSortLabel, Stack, Divider, Chip
 } from '@mui/material';
 import { 
-  Edit as EditIcon, Delete as DeleteIcon, Add as AddIcon, Menu as MenuIcon, 
+  Delete as DeleteIcon, Menu as MenuIcon, 
   Dashboard as DashboardIcon, Event as EventIcon, Logout as LogoutIcon, 
   Search as SearchIcon, FilterList as FilterIcon, Clear as ClearIcon, 
-  GetApp as ExportIcon, Sort as SortIcon, Visibility as ViewIcon,
+  GetApp as ExportIcon, Sort as SortIcon,
   AttachMoney as MoneyIcon, ConfirmationNumber as TicketIcon
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
@@ -44,21 +44,19 @@ const AdminDonationTable = () => {
     // Apply search filter
     if (searchTerm) {
       filtered = filtered.filter(donation => 
-        donation.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        `${donation.firstName || ''} ${donation.lastName || ''}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
         donation.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donation.message?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        donation.paymentIntentId?.toLowerCase().includes(searchTerm.toLowerCase())
+        donation.stripePaymentIntentId?.toLowerCase().includes(searchTerm.toLowerCase())
       );
     }
 
     // Apply status filter
     if (filterStatus !== 'all') {
       filtered = filtered.filter(donation => {
-        if (filterStatus === 'completed') return donation.status === 'succeeded';
-        if (filterStatus === 'pending') return donation.status === 'processing';
+        if (filterStatus === 'completed') return donation.status === 'completed';
+        if (filterStatus === 'pending') return donation.status === 'pending';
         if (filterStatus === 'failed') return donation.status === 'failed';
-        if (filterStatus === 'anonymous') return donation.anonymous === true;
-        if (filterStatus === 'named') return donation.anonymous === false;
+        if (filterStatus === 'processing') return donation.status === 'processing';
         return true;
       });
     }
@@ -66,7 +64,7 @@ const AdminDonationTable = () => {
     // Apply amount filter
     if (filterAmount !== 'all') {
       filtered = filtered.filter(donation => {
-        const amount = donation.amount / 100; // Convert from cents to dollars
+        const amount = donation.amount; // Amount is already in dollars
         switch (filterAmount) {
           case 'small': return amount < 50;
           case 'medium': return amount >= 50 && amount < 200;
@@ -83,8 +81,8 @@ const AdminDonationTable = () => {
 
       switch (sortBy) {
         case 'name':
-          aValue = (a.name || '').toLowerCase();
-          bValue = (b.name || '').toLowerCase();
+          aValue = `${a.firstName || ''} ${a.lastName || ''}`.toLowerCase();
+          bValue = `${b.firstName || ''} ${b.lastName || ''}`.toLowerCase();
           break;
         case 'email':
           aValue = (a.email || '').toLowerCase();
@@ -224,15 +222,16 @@ const AdminDonationTable = () => {
 
   const getStatusColor = (status) => {
     switch (status) {
-      case 'succeeded': return 'success';
+      case 'completed': return 'success';
       case 'processing': return 'warning';
+      case 'pending': return 'info';
       case 'failed': return 'error';
       default: return 'default';
     }
   };
 
   const getAmountColor = (amount) => {
-    const amountInDollars = amount / 100;
+    const amountInDollars = amount; // Amount is already in dollars
     if (amountInDollars >= 1000) return '#d32f2f';
     if (amountInDollars >= 200) return '#1976d2';
     if (amountInDollars >= 50) return '#388e3c';
@@ -420,9 +419,8 @@ const AdminDonationTable = () => {
                   <MenuItem value="all">All Donations</MenuItem>
                   <MenuItem value="completed">Completed</MenuItem>
                   <MenuItem value="pending">Pending</MenuItem>
+                  <MenuItem value="processing">Processing</MenuItem>
                   <MenuItem value="failed">Failed</MenuItem>
-                  <MenuItem value="anonymous">Anonymous</MenuItem>
-                  <MenuItem value="named">Named</MenuItem>
                 </Select>
               </FormControl>
               <FormControl size="small" sx={{ minWidth: 150 }}>
@@ -538,7 +536,7 @@ const AdminDonationTable = () => {
                         Status
                       </TableSortLabel>
                     </TableCell>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}><b>Message</b></TableCell>
+                    <TableCell sx={{ verticalAlign: 'middle', width: 200 }}><b>Organization</b></TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', width: 200 }}><b>Transaction ID</b></TableCell>
                     <TableCell align="center" sx={{ verticalAlign: 'middle', width: 120 }}><b>Actions</b></TableCell>
                   </TableRow>
@@ -549,18 +547,10 @@ const AdminDonationTable = () => {
                     .map((donation, idx) => (
                       <TableRow key={donation._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
                         <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
-                          {donation.anonymous ? (
-                            <Chip label="Anonymous" size="small" color="secondary" />
-                          ) : (
-                            donation.name || 'N/A'
-                          )}
+                          {`${donation.firstName || ''} ${donation.lastName || ''}`.trim() || 'N/A'}
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 180 }}>
-                          {donation.anonymous ? (
-                            <Chip label="Hidden" size="small" color="secondary" />
-                          ) : (
-                            donation.email || 'N/A'
-                          )}
+                          {donation.email || 'N/A'}
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
                           <Typography 
@@ -570,7 +560,7 @@ const AdminDonationTable = () => {
                               color: getAmountColor(donation.amount)
                             }}
                           >
-                            ${(donation.amount / 100).toFixed(2)}
+                            ${donation.amount.toFixed(2)}
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>
@@ -591,7 +581,7 @@ const AdminDonationTable = () => {
                           />
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 200, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                          {donation.message || '-'}
+                          {donation.org || '-'}
                         </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 200 }}>
                           <Typography sx={{ 
@@ -599,7 +589,7 @@ const AdminDonationTable = () => {
                             fontSize: '0.8rem',
                             wordBreak: 'break-word'
                           }}>
-                            {donation.paymentIntentId || 'N/A'}
+                            {donation.stripePaymentIntentId || 'N/A'}
                           </Typography>
                         </TableCell>
                         <TableCell align="center" sx={{ verticalAlign: 'middle', width: 120 }}>
