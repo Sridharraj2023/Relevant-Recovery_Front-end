@@ -525,7 +525,6 @@ const AdminEventTable = () => {
               <Table sx={{ minWidth: 1200, borderRadius: 2 }}>
                 <TableHead>
                   <TableRow sx={{ backgroundColor: '#f1f1f1' }}>
-                    <TableCell sx={{ verticalAlign: 'middle', width: 100 }}><b>Image</b></TableCell>
                     <TableCell sx={{ verticalAlign: 'middle', width: 180 }}>
                       <TableSortLabel
                         active={sortBy === 'title'}
@@ -589,19 +588,6 @@ const AdminEventTable = () => {
                     .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((event, idx) => (
                       <TableRow key={event._id} sx={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f9f9f9' }}>
-                        <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>
-                          {event.image ? (
-                            <img
-                              src={event.image}
-                              alt={event.title}
-                              style={{ width: 80, height: 60, objectFit: 'cover', borderRadius: 4 }}
-                            />
-                          ) : (
-                            <Box sx={{ width: 80, height: 60, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 16, bgcolor: '#cceee5', borderRadius: 2 }}>
-                              No Image
-                            </Box>
-                          )}
-                        </TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 180 }}>{event.title}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 120 }}>{event.date}</TableCell>
                         <TableCell sx={{ verticalAlign: 'middle', width: 100 }}>{event.time}</TableCell>

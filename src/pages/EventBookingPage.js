@@ -612,46 +612,8 @@ const EventBookingPage = () => {
         {activeStep === 0 && (
           <Card sx={{ p: 4, borderRadius: 3, boxShadow: '0 8px 32px rgba(0,0,0,0.1)' }}>
             <Grid container spacing={4}>
-              {/* Event Image */}
-              <Grid item xs={12} md={5}>
-                <Box sx={{ 
-                  height: 300, 
-                  borderRadius: 3, 
-                  overflow: 'hidden',
-                  boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
-                  position: 'relative'
-                }}>
-                  {event.image ? (
-                    <img 
-                      src={event.image} 
-                      alt={event.title} 
-                      style={{ 
-                        width: '100%', 
-                        height: '100%', 
-                        objectFit: 'cover' 
-                      }} 
-                    />
-                  ) : (
-                    <Box sx={{ 
-                      width: '100%', 
-                      height: '100%', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      background: 'linear-gradient(45deg, #089e8e 30%, #0893b2 90%)',
-                      color: 'white',
-                      fontSize: 24,
-                      fontWeight: 600
-                    }}>
-                      <EventIcon sx={{ fontSize: 48, mr: 2 }} />
-                      Event
-                    </Box>
-                  )}
-                </Box>
-              </Grid>
-
               {/* Event Details */}
-              <Grid item xs={12} md={7}>
+              <Grid item xs={12}>
                 <Box sx={{ mb: 3 }}>
                   <Typography variant="h4" sx={{ fontWeight: 800, mb: 2, lineHeight: 1.2 }}>
                     {event.title}
@@ -739,7 +701,20 @@ const EventBookingPage = () => {
                     <IconButton 
                       onClick={() => handleQuantityChange(formData.quantity - 1)} 
                       disabled={formData.quantity <= 1}
-                      sx={{ border: '2px solid', borderColor: 'primary.main' }}
+                      sx={{ 
+                        border: '2px solid', 
+                        borderColor: 'primary.main',
+                        width: 40,
+                        height: 40,
+                        '&:hover': {
+                          backgroundColor: 'primary.light',
+                          color: 'white'
+                        },
+                        '&:disabled': {
+                          borderColor: 'grey.300',
+                          color: 'grey.400'
+                        }
+                      }}
                     >
                       -
                     </IconButton>
@@ -749,7 +724,20 @@ const EventBookingPage = () => {
                     <IconButton 
                       onClick={() => handleQuantityChange(formData.quantity + 1)} 
                       disabled={formData.quantity >= 10}
-                      sx={{ border: '2px solid', borderColor: 'primary.main' }}
+                      sx={{ 
+                        border: '2px solid', 
+                        borderColor: 'primary.main',
+                        width: 40,
+                        height: 40,
+                        '&:hover': {
+                          backgroundColor: 'primary.light',
+                          color: 'white'
+                        },
+                        '&:disabled': {
+                          borderColor: 'grey.300',
+                          color: 'grey.400'
+                        }
+                      }}
                     >
                       +
                     </IconButton>

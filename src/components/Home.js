@@ -257,7 +257,7 @@ export default function Home() {
                        position: 'relative',
                      }}>
                        <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
+                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2 }}>
                            <CalendarToday sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
                            <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
                              {formatDate(event.date)}
@@ -270,14 +270,22 @@ export default function Home() {
                              />
                            )}
                          </Box>
-                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: '#181f29' }}>
+                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: '#181f29', lineHeight: 1.3 }}>
                            {event.title}
                          </Typography>
-                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: '#555', fontSize: 16 }}>
-                           <AccessTime sx={{ fontSize: 18, mr: 0.5 }} />
-                           <span>{event.time}</span>
-                           <LocationOn sx={{ fontSize: 18, ml: 2, mr: 0.5 }} />
-                           <span>{event.place}</span>
+                         {/* Time in one row */}
+                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5, width: '100%' }}>
+                           <AccessTime sx={{ fontSize: 18, mr: 1, color: seaGreen }} />
+                           <Typography variant="body2" sx={{ color: '#555', fontWeight: 500, fontSize: 16, wordBreak: 'break-word' }}>
+                             {event.time}
+                           </Typography>
+                         </Box>
+                         {/* Location in one row */}
+                         <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2, width: '100%' }}>
+                           <LocationOn sx={{ fontSize: 18, mr: 1, color: seaGreen, mt: 0.2, flexShrink: 0 }} />
+                           <Typography variant="body2" sx={{ color: '#555', fontWeight: 500, fontSize: 16, wordBreak: 'break-word', lineHeight: 1.4 }}>
+                             {event.place}
+                           </Typography>
                          </Box>
                          <Typography
                            variant="body1"
@@ -285,8 +293,15 @@ export default function Home() {
                              color: '#444',
                              mb: 2,
                              fontSize: 16,
-                             overflow: 'auto',
-                             lineHeight: 1.5,
+                             lineHeight: 1.6,
+                             wordBreak: 'break-word',
+                             whiteSpace: 'pre-wrap',
+                             overflowWrap: 'break-word',
+                             display: '-webkit-box',
+                             WebkitLineClamp: 4,
+                             WebkitBoxOrient: 'vertical',
+                             overflow: 'hidden',
+                             textOverflow: 'ellipsis'
                            }}
                          >
                            {event.desc}

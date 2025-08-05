@@ -41,7 +41,6 @@ const EventForm = ({ open, event, onClose, onSave }) => {
     place: '', // was 'location'
     desc: '',
     actionType: '', // was 'action'
-    image: '',
     capacity: '',
     cost: '',
     ticketCost: '', // New field for ticket cost
@@ -95,7 +94,6 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         place: event.place || '', // was 'location'
         desc: event.desc || '',
         actionType: event.actionType || '', // was 'action'
-        image: event.image || '',
         capacity: event.capacity || '',
         cost: event.cost || '',
         ticketCost: event.cost && event.cost !== 'Free' ? event.cost.replace(/[^0-9.]/g, '') : '', // Extract number from cost string
@@ -111,9 +109,8 @@ const EventForm = ({ open, event, onClose, onSave }) => {
         place: '', // was 'location'
         desc: '',
         actionType: '', // was 'action'
-        image: '',
         capacity: '',
-        cost: '',
+        cost: 'Free', // Default to Free
         ticketCost: '', // Initialize ticketCost
         highlights: [''],
         specialGift: ''
@@ -123,10 +120,8 @@ const EventForm = ({ open, event, onClose, onSave }) => {
   }, [event, open]);
 
   const handleChange = (e) => {
-    const { name, value, checked, files } = e.target;
-    if (name === 'image') {
-      setFormData({ ...formData, image: files[0] });
-    } else if (name.startsWith('highlight-')) {
+    const { name, value, checked } = e.target;
+    if (name.startsWith('highlight-')) {
       const idx = parseInt(name.split('-')[1], 10);
       const newHighlights = [...formData.highlights];
       newHighlights[idx] = value;
@@ -149,8 +144,8 @@ const EventForm = ({ open, event, onClose, onSave }) => {
     setError('');
     
     // Validate form data
-    if (!formData.title || !formData.date || !formData.startTime || !formData.place || !formData.desc || !formData.actionType) {
-      setError('Please fill in all required fields');
+    if (!formData.title || !formData.date || !formData.startTime || !formData.place || !formData.desc || !formData.actionType || !formData.cost) {
+      setError('Please fill in all required fields including Event Type');
       setLoading(false);
       return;
     }
@@ -167,40 +162,41 @@ const EventForm = ({ open, event, onClose, onSave }) => {
       const url = event 
         ? `https://relevant-recovery-back-end.onrender.com/api/events/${event._id}`
         : 'https://relevant-recovery-back-end.onrender.com/api/events';
-      const form = new FormData();
-      form.append('date', formData.date ? formData.date.format('MMMM DD, YYYY') : '');
-      form.append('title', formData.title);
-      // Combine start and end time into a single time field
-      const combinedTime = formData.endTime 
-        ? `${formData.startTime} - ${formData.endTime}` 
-        : formData.startTime;
-      form.append('time', combinedTime);
-      form.append('place', formData.place); // was formData.location
+      
+      // Prepare request body
+      const requestBody = {
+        date: formData.date ? formData.date.format('MMMM DD, YYYY') : '',
+        title: formData.title,
+        time: formData.endTime 
+          ? `${formData.startTime} - ${formData.endTime}` 
+          : formData.startTime,
+        place: formData.place,
+        capacity: formData.capacity,
+        desc: formData.desc,
+        highlights: JSON.stringify(formData.highlights.filter(h => h && h.trim() !== '')),
+        specialGift: formData.specialGift,
+        actionType: formData.actionType
+      };
       
       // Handle cost field based on event type
       if (formData.cost === 'Free') {
-        form.append('cost', 'Free');
+        requestBody.cost = 'Free';
       } else if (formData.cost === 'Paid' && formData.ticketCost) {
-        form.append('cost', `$${formData.ticketCost}`);
+        requestBody.cost = `$${formData.ticketCost}`;
       } else if (formData.cost === 'Paid' && !formData.ticketCost) {
         throw new Error('Ticket cost is required for paid events');
+      } else {
+        // Fallback to ensure cost is always set
+        requestBody.cost = formData.cost || 'Free';
       }
-      
-      form.append('capacity', formData.capacity);
-      form.append('desc', formData.desc);
-      if (formData.image && formData.image instanceof File) {
-        form.append('image', formData.image);
-      }
-      form.append('highlights', JSON.stringify(formData.highlights.filter(h => h && h.trim() !== '')));
-      form.append('specialGift', formData.specialGift);
-      form.append('actionType', formData.actionType); // was formData.action
       
       const response = await fetch(url, {
         method: event ? 'PUT' : 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
         },
-        body: form,
+        body: JSON.stringify(requestBody),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -488,24 +484,7 @@ const EventForm = ({ open, event, onClose, onSave }) => {
                     margin="dense"
                   />
                 </Grid>
-                {/* Image Upload */}
-                <Grid item xs={12} sx={{ width: '100%' }}>
-                  <Button
-                    variant="outlined"
-                    component="label"
-                    fullWidth
-                    sx={{ my: 1 }}
-                  >
-                    {formData.image ? formData.image.name : 'Upload Event Image'}
-                    <input
-                      type="file"
-                      accept="image/*"
-                      name="image"
-                      hidden
-                      onChange={handleChange}
-                    />
-                  </Button>
-                </Grid>
+
                 {/* Highlights as bullet points */}
                 <Grid item xs={12} sx={{ width: '100%' }}>
                   <Box>

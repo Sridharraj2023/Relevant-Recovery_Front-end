@@ -132,48 +132,19 @@ const [openEventRegister, setOpenEventRegister] = useState({ open: false, eventI
                   borderRadius: 4,
                   boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
                   p: 0,
-                  height: { xs: 'auto', md: 500 },
                   width: { xs: '100%', md: '70vw', xl: 950 },
                   maxWidth: { xs: '100%', md: 950 },
                   minWidth: { xl: 700 },
                   display: 'flex',
-                  flexDirection: { xs: 'column', md: 'row' },
+                  flexDirection: 'column',
                   overflow: 'hidden',
                   alignItems: 'stretch',
                   position: 'relative',
-                  minHeight: { xs: 'auto', md: 700 },
                   mx: 'auto', // center on large screens
                 }}>
-                  {/* Event Image */}
-                  <Box sx={{
-                    width: { xs: '100%', md: 300 },
-                    height: { xs: 200, md: '40%' },
-                    flexShrink: 0,
-                    background: '#cceee5',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    overflow: 'hidden',
-                    borderRadius: { xs: 0, md: 4 },
-                    marginLeft: { xs: 0, md: 2 },
-                    marginTop: { xs: 0, md: 2 },
-                  }}>
-                    {event.image ? (
-                      <img
-                        src={event.image}
-                        alt={event.title}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                        onError={e => { e.target.onerror = null; e.target.src = '/path/to/placeholder.jpg'; }}
-                      />
-                    ) : (
-                      <Box sx={{ width: '100%', height: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontSize: 24 }}>
-                        No Image
-                      </Box>
-                    )}
-                  </Box>
                   {/* Event Details */}
                   <Box sx={{
-                    flex: 1,
+                    width: '100%',
                     p: { xs: 3, md: 4 },
                     display: 'flex',
                     flexDirection: 'column',
