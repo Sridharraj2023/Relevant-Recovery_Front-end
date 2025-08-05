@@ -1,9 +1,13 @@
-import React from 'react';
-import { Box, Grid, Typography, Button, Chip } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { Box, Grid, Typography, Button, Chip, CircularProgress, Alert } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import GroupIcon from '@mui/icons-material/Group';
 import PlaceIcon from '@mui/icons-material/Place';
-
+import { CalendarToday, AccessTime, LocationOn } from '@mui/icons-material';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay, Pagination } from 'swiper/modules';
+import 'swiper/css';
+import 'swiper/css/pagination';
 
 const seaGreen = '#089e8e';
 const heroImg = 'https://images.unsplash.com/photo-1609234656388-0ff363383899?auto=format&fit=crop&w=600&q=80'; // Placeholder
@@ -27,46 +31,43 @@ const supportCards = [
   },
 ];
 
-const events = [
-  {
-    date: 'July 31, 2025',
-    title: 'Community Kickoff',
-    time: '5:00 PM - 8:00 PM',
-    location: 'Wayzata Community Church',
-    desc: 'Join us for light refreshments and inspiring stories of hope. Attendees receive a free ticket to Minnesota Twins Recovery Week!',
-    action: 'Register Now',
-    free: true,
-  },
-  {
-    date: 'September 16, 2025',
-    title: 'Minnesota Twins vs. Yankees',
-    time: '6:00 PM',
-    location: 'Target Field',
-    desc: 'First pitch ceremony honoring Jim Ramstad and Karl Pohlad during Recovery Week.',
-    action: 'Buy Tickets',
-    free: false,
-  },
-  {
-    date: 'September 21, 2025',
-    title: 'Twins Game - Recovery Week',
-    time: 'Game Time',
-    location: 'Target Field',
-    desc: 'Continue celebrating Recovery Week as we honor Jim Ramstad and Karl Pohlad.',
-    action: 'Buy Tickets',
-    free: false,
-  },
-  {
-    date: 'September 25, 2025',
-    title: 'MRC / StepUP Gratitude Breakfast',
-    time: '7:30 AM',
-    location: 'Augsburg University',
-    desc: 'Keynote presentation by John Magnuson, Founder of Relevant Recovery.',
-    action: 'Register Now',
-    free: true,
-  },
-];
-
 export default function Home() {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      const response = await fetch('https://relevant-recovery-back-end.onrender.com/api/events');
+      
+      if (!response.ok) {
+        throw new Error('Failed to fetch events');
+      }
+
+      const data = await response.json();
+      // Sort events by date (earliest first)
+      const sortedEvents = data.sort((a, b) => new Date(a.date) - new Date(b.date));
+      setEvents(sortedEvents);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
   return (
     <Box>
       {/* Hero Section */}
@@ -206,82 +207,145 @@ export default function Home() {
         <Typography variant="h6" sx={{ mb: 4, color: '#555', maxWidth: 700, mx: 'auto' }}>
           Join us for inspiring events that build community and celebrate recovery milestones.
         </Typography>
-        <Grid container spacing={4} alignItems="stretch" justifyContent="center" sx={{ maxWidth: 1020, mx: 'auto', flexWrap: 'wrap' }}>
-          {events.map((event) => (
-            <Grid item xs={12} sm={6} md={6} key={event.title} sx={{ display: 'flex', justifyContent: 'center' }}>
-              <Box sx={{
-                background: '#e6fcf5',
-                borderRadius: 3,
-                boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
-                p: 4,
-                height: 320,
-                width: 480,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                overflow: 'hidden',
-              }}>
-                <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                  <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
-                    <FavoriteBorderIcon sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
-                    <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
-                      {event.date}
-                    </Typography>
-                    {event.free && (
-                      <Chip
-                        icon={<FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 18 }} />}
-                        label="Free Ticket"
-                        sx={{ ml: 'auto', background: '#b9fbc0', color: seaGreen, fontWeight: 700, fontSize: 15, borderRadius: 2, px: 1.5, height: 32 }}
-                      />
-                    )}
-                  </Box>
-                  <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: '#181f29' }}>
-                    {event.title}
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: '#555', fontSize: 16 }}>
-                    <FavoriteBorderIcon sx={{ fontSize: 18, mr: 0.5 }} />
-                    <span>{event.time}</span>
-                    <PlaceIcon sx={{ fontSize: 18, ml: 2, mr: 0.5 }} />
-                    <span>{event.location}</span>
-                  </Box>
-                  <Typography
-                    variant="body1"
-                    sx={{
-                      color: '#444',
-                      mb: 2,
-                      fontSize: 16,
-                      overflow: 'auto',
-                    }}
-                  >
-                    {event.desc}
-                  </Typography>
-                </Box>
-                <Button
-                  variant="contained"
-                  fullWidth
-                  sx={{
-                    mt: 2,
-                    background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
-                    color: '#fff',
-                    fontWeight: 700,
-                    borderRadius: 999,
-                    fontSize: 18,
-                    py: 1.2,
-                    boxShadow: 'none',
-                    textTransform: 'none',
-                    '&:hover': {
-                      background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
-                      opacity: 0.95,
-                      boxShadow: 'none',
-                    },
+        
+        {loading ? (
+          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: 200 }}>
+            <CircularProgress />
+          </Box>
+        ) : error ? (
+          <Alert severity="error" sx={{ mb: 3, maxWidth: 600, mx: 'auto' }}>
+            {error}
+          </Alert>
+        ) : events.length > 0 ? (
+                     <Box sx={{ maxWidth: 1020, mx: 'auto' }}>
+             {/* Event Carousel with Swiper */}
+             <Box sx={{ position: 'relative', borderRadius: 3, mb: 3, minHeight: 400 }}>
+                               <Swiper
+                  modules={[Autoplay, Pagination]}
+                  spaceBetween={30}
+                  slidesPerView={1}
+                  centeredSlides={true}
+                  autoplay={{
+                    delay: 1000, // 1 second - fast rotation
+                    disableOnInteraction: false,
+                  }}
+                  pagination={{
+                    clickable: true,
+                  }}
+                  loop={true}
+                  style={{
+                    '--swiper-pagination-color': seaGreen,
+                    '--swiper-pagination-bullet-inactive-color': '#ddd',
+                    '--swiper-pagination-bullet-inactive-opacity': '1',
                   }}
                 >
-                  {event.action}
-                </Button>
-              </Box>
-            </Grid>
-          ))}
-        </Grid>
+                 {events.map((event, index) => (
+                   <SwiperSlide key={event._id}>
+                     <Box sx={{
+                       background: '#e6fcf5',
+                       borderRadius: 3,
+                       boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
+                       p: 4,
+                       height: 320,
+                       width: '100%',
+                       maxWidth: 480,
+                       mx: 'auto',
+                       display: 'flex',
+                       flexDirection: 'column',
+                       justifyContent: 'space-between',
+                       overflow: 'hidden',
+                       position: 'relative',
+                     }}>
+                       <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 1 }}>
+                           <CalendarToday sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
+                           <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
+                             {formatDate(event.date)}
+                           </Typography>
+                           {event.cost === 'Free' && (
+                             <Chip
+                               icon={<FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 18 }} />}
+                               label="Free Ticket"
+                               sx={{ ml: 'auto', background: '#b9fbc0', color: seaGreen, fontWeight: 700, fontSize: 15, borderRadius: 2, px: 1.5, height: 32 }}
+                             />
+                           )}
+                         </Box>
+                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 1, color: '#181f29' }}>
+                           {event.title}
+                         </Typography>
+                         <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, color: '#555', fontSize: 16 }}>
+                           <AccessTime sx={{ fontSize: 18, mr: 0.5 }} />
+                           <span>{event.time}</span>
+                           <LocationOn sx={{ fontSize: 18, ml: 2, mr: 0.5 }} />
+                           <span>{event.place}</span>
+                         </Box>
+                         <Typography
+                           variant="body1"
+                           sx={{
+                             color: '#444',
+                             mb: 2,
+                             fontSize: 16,
+                             overflow: 'auto',
+                             lineHeight: 1.5,
+                           }}
+                         >
+                           {event.desc}
+                         </Typography>
+                       </Box>
+                       <Button
+                         variant="contained"
+                         fullWidth
+                         sx={{
+                           mt: 2,
+                           background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
+                           color: '#fff',
+                           fontWeight: 700,
+                           borderRadius: 999,
+                           fontSize: 18,
+                           py: 1.2,
+                           boxShadow: 'none',
+                           textTransform: 'none',
+                           '&:hover': {
+                             background: 'linear-gradient(90deg, #089e8e 0%, #0893b2 100%)',
+                             opacity: 0.95,
+                             boxShadow: 'none',
+                           },
+                         }}
+                         onClick={() => {
+                           if (event.cost === 'Free') {
+                             // Handle free event registration
+                             console.log('Register for free event:', event._id);
+                           } else {
+                             // Navigate to booking page
+                             window.location.href = `/book-event/${event._id}`;
+                           }
+                         }}
+                       >
+                         {event.cost === 'Free' ? 'Register Now' : 'Book Ticket'}
+                       </Button>
+                     </Box>
+                   </SwiperSlide>
+                 ))}
+               </Swiper>
+               
+                               {/* Swiper Pagination */}
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
+                  <Typography variant="body2" sx={{ color: '#666' }}>
+                    Auto-rotating every 1s
+                  </Typography>
+                </Box>
+             </Box>
+           </Box>
+        ) : (
+          <Box sx={{ textAlign: 'center', py: 8 }}>
+            <Typography variant="h5" sx={{ color: '#666', mb: 2 }}>
+              No events scheduled at the moment
+            </Typography>
+            <Typography variant="body1" sx={{ color: '#888' }}>
+              Check back soon for upcoming events and community gatherings.
+            </Typography>
+          </Box>
+        )}
       </Box>
     </Box>
   );
