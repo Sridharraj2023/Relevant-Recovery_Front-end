@@ -245,10 +245,10 @@ export default function Home() {
                        background: '#e6fcf5',
                        borderRadius: 3,
                        boxShadow: '0 2px 12px 0 rgba(16,30,54,0.06)',
-                       p: 4,
-                       height: 320,
+                       p: { xs: 2, sm: 3, md: 4 },
+                       height: { xs: 320, sm: 350, md: 380 },
                        width: '100%',
-                       maxWidth: 480,
+                       maxWidth: { xs: 320, sm: 400, md: 480 },
                        mx: 'auto',
                        display: 'flex',
                        flexDirection: 'column',
@@ -257,33 +257,74 @@ export default function Home() {
                        position: 'relative',
                      }}>
                        <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
-                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2 }}>
-                           <CalendarToday sx={{ color: seaGreen, mr: 1, fontSize: 26 }} />
-                           <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: 18 }}>
-                             {formatDate(event.date)}
-                           </Typography>
+                         <Box sx={{ display: 'flex', alignItems: 'center', width: '100%', mb: 2, flexWrap: 'wrap', gap: 1 }}>
+                           <Box sx={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
+                             <CalendarToday sx={{ color: seaGreen, mr: 1, fontSize: { xs: 20, sm: 22, md: 26 } }} />
+                             <Typography variant="subtitle1" sx={{ color: seaGreen, fontWeight: 700, fontSize: { xs: 14, sm: 16, md: 18 }, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                               {formatDate(event.date)}
+                             </Typography>
+                           </Box>
                            {event.cost === 'Free' && (
                              <Chip
-                               icon={<FavoriteBorderIcon sx={{ color: seaGreen, fontSize: 18 }} />}
+                               icon={<FavoriteBorderIcon sx={{ color: seaGreen, fontSize: { xs: 14, sm: 16, md: 18 } }} />}
                                label="Free Ticket"
-                               sx={{ ml: 'auto', background: '#b9fbc0', color: seaGreen, fontWeight: 700, fontSize: 15, borderRadius: 2, px: 1.5, height: 32 }}
+                               sx={{ 
+                                 background: '#b9fbc0', 
+                                 color: seaGreen, 
+                                 fontWeight: 700, 
+                                 fontSize: { xs: 12, sm: 13, md: 15 }, 
+                                 borderRadius: 2, 
+                                 px: 1.5, 
+                                 height: { xs: 28, sm: 30, md: 32 },
+                                 flexShrink: 0
+                               }}
                              />
                            )}
                          </Box>
-                         <Typography variant="h6" sx={{ fontWeight: 700, mb: 2, color: '#181f29', lineHeight: 1.3 }}>
+                         <Typography variant="h6" sx={{ 
+                           fontWeight: 700, 
+                           mb: 2, 
+                           color: '#181f29', 
+                           lineHeight: 1.3,
+                           fontSize: { xs: 16, sm: 18, md: 20 },
+                           overflow: 'hidden',
+                           textOverflow: 'ellipsis',
+                           display: '-webkit-box',
+                           WebkitLineClamp: 2,
+                           WebkitBoxOrient: 'vertical'
+                         }}>
                            {event.title}
                          </Typography>
                          {/* Time in one row */}
                          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5, width: '100%' }}>
-                           <AccessTime sx={{ fontSize: 18, mr: 1, color: seaGreen }} />
-                           <Typography variant="body2" sx={{ color: '#555', fontWeight: 500, fontSize: 16, wordBreak: 'break-word' }}>
+                           <AccessTime sx={{ fontSize: { xs: 16, sm: 17, md: 18 }, mr: 1, color: seaGreen, flexShrink: 0 }} />
+                           <Typography variant="body2" sx={{ 
+                             color: '#555', 
+                             fontWeight: 500, 
+                             fontSize: { xs: 14, sm: 15, md: 16 }, 
+                             wordBreak: 'break-word',
+                             overflow: 'hidden',
+                             textOverflow: 'ellipsis',
+                             whiteSpace: 'nowrap'
+                           }}>
                              {event.time}
                            </Typography>
                          </Box>
                          {/* Location in one row */}
                          <Box sx={{ display: 'flex', alignItems: 'flex-start', mb: 2, width: '100%' }}>
-                           <LocationOn sx={{ fontSize: 18, mr: 1, color: seaGreen, mt: 0.2, flexShrink: 0 }} />
-                           <Typography variant="body2" sx={{ color: '#555', fontWeight: 500, fontSize: 16, wordBreak: 'break-word', lineHeight: 1.4 }}>
+                           <LocationOn sx={{ fontSize: { xs: 16, sm: 17, md: 18 }, mr: 1, color: seaGreen, mt: 0.2, flexShrink: 0 }} />
+                           <Typography variant="body2" sx={{ 
+                             color: '#555', 
+                             fontWeight: 500, 
+                             fontSize: { xs: 14, sm: 15, md: 16 }, 
+                             wordBreak: 'break-word', 
+                             lineHeight: 1.4,
+                             overflow: 'hidden',
+                             textOverflow: 'ellipsis',
+                             display: '-webkit-box',
+                             WebkitLineClamp: 2,
+                             WebkitBoxOrient: 'vertical'
+                           }}>
                              {event.place}
                            </Typography>
                          </Box>
@@ -292,13 +333,13 @@ export default function Home() {
                            sx={{
                              color: '#444',
                              mb: 2,
-                             fontSize: 16,
+                             fontSize: { xs: 13, sm: 14, md: 16 },
                              lineHeight: 1.6,
                              wordBreak: 'break-word',
                              whiteSpace: 'pre-wrap',
                              overflowWrap: 'break-word',
                              display: '-webkit-box',
-                             WebkitLineClamp: 4,
+                             WebkitLineClamp: { xs: 3, sm: 4, md: 5 },
                              WebkitBoxOrient: 'vertical',
                              overflow: 'hidden',
                              textOverflow: 'ellipsis'
@@ -316,8 +357,8 @@ export default function Home() {
                            color: '#fff',
                            fontWeight: 700,
                            borderRadius: 999,
-                           fontSize: 18,
-                           py: 1.2,
+                           fontSize: { xs: 14, sm: 16, md: 18 },
+                           py: { xs: 1, sm: 1.1, md: 1.2 },
                            boxShadow: 'none',
                            textTransform: 'none',
                            '&:hover': {
