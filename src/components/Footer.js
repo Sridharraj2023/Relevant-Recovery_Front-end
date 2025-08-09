@@ -1,5 +1,6 @@
 import React from 'react';
 import { Box, Typography, Grid, Link, Button, TextField, IconButton } from '@mui/material';
+import { Link as RouterLink } from 'react-router-dom';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -32,10 +33,18 @@ export default function Footer() {
             Quick Links
           </Typography>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-            {['Home', 'About Us', 'Services', 'Events', 'Donate', 'Contact', 'Admin Login'].map((text) => (
+            {[
+              { text: 'Home', to: '/' },
+              { text: 'About Us', to: '/about' },
+              { text: 'Services', to: '/services' },
+              { text: 'Events', to: '/events' },
+              { text: 'Donate', to: '/donation' },
+              { text: 'Contact', to: '/contact' },
+            ].map(({ text, to }) => (
               <Link
                 key={text}
-                href="#"
+                component={RouterLink}
+                to={to}
                 underline="none"
                 sx={{ color: darkText, fontSize: 17, fontWeight: 500, '&:hover': { color: seaGreen } }}
               >

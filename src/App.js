@@ -17,13 +17,22 @@ import AdminRegistrationTable from './components/AdminRegistrationTable';
 import StripeMockDashboard from './components/StripeMockDashboard';
 import EventBookingPage from './pages/EventBookingPage';
 import BookingConfirmationPage from './pages/BookingConfirmationPage';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import DonationSuccess from './components/DonationSuccess';
 
+
+function ScrollToTop() {
+  const location = useLocation();
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+  return null;
+}
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <CssBaseline />
       <Routes>
         <Route path="/admin" element={<Admin />} />

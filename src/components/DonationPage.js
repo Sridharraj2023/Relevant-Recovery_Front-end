@@ -332,7 +332,24 @@ export default function DonationPage() {
                   <Grid item xs={12} sm={4}><TextField label="City" name="city" value={form.city} onChange={handleFormChange} fullWidth size="small" error={!!fieldErrors.city} helperText={fieldErrors.city || ''} /></Grid>
                   <Grid item xs={12} sm={6}><TextField label="State" name="state" value={form.state} onChange={handleFormChange} fullWidth size="small" error={!!fieldErrors.state} helperText={fieldErrors.state || ''} /></Grid>
                   <Grid item xs={12} sm={6}><TextField label="Zip" name="zip" value={form.zip} onChange={handleFormChange} fullWidth size="small" error={!!fieldErrors.zip} helperText={fieldErrors.zip || ''} /></Grid>
-                  <Grid item xs={12} sm={6}><TextField select label="Country" name="country" value={form.country} onChange={handleFormChange} fullWidth size="small" SelectProps={{ native: true }} error={!!fieldErrors.country} helperText={fieldErrors.country || ''}>
+                  <Grid item xs={12} sm={6}><TextField 
+                    select 
+                    label="Country" 
+                    name="country" 
+                    value={form.country} 
+                    onChange={handleFormChange} 
+                    fullWidth 
+                    size="small" 
+                    SelectProps={{ native: true }} 
+                    error={!!fieldErrors.country} 
+                    helperText={fieldErrors.country || ''}
+                    sx={{ 
+                      width: '100%',
+                      '& .MuiInputBase-root': { width: '100%' },
+                      '& .MuiOutlinedInput-root': { width: '100%' },
+                      '& .MuiSelect-select, & .MuiNativeSelect-select, & select': { width: '100%' }
+                    }}
+                  >
   <option value="US">United States</option>
   <option value="IN">India</option>
   <option value="CA">Canada</option>

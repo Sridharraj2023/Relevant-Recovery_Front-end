@@ -550,12 +550,24 @@ const EventBookingPage = () => {
             background: 'linear-gradient(45deg, #089e8e 30%, #0893b2 90%)',
             backgroundClip: 'text',
             WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
+              WebkitTextFillColor: 'transparent',
+            textAlign: { xs: 'center', sm: 'left' },
+            fontSize: { xs: '1.75rem', sm: '2.25rem', md: '2.75rem' },
+            lineHeight: { xs: 1.2, sm: 1.2 },
+            wordBreak: 'break-word'
           }}>
             Book Your Tickets
           </Typography>
           
-          <Typography variant="h6" color="text.secondary" sx={{ mb: 4 }}>
+          <Typography 
+            variant="h6" 
+            color="text.secondary" 
+            sx={{ 
+              mb: 4,
+              textAlign: { xs: 'center', sm: 'left' },
+              fontSize: { xs: '1rem', sm: '1.25rem' }
+            }}
+          >
             Complete your booking in just a few steps
           </Typography>
         </Box>

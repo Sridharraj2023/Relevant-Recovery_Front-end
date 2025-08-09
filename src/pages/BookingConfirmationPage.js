@@ -190,9 +190,11 @@ const BookingConfirmationPage = () => {
                 <Typography>{event.date} • {event.time}</Typography>
               </Box>
               
-              <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                 <Typography>Location:</Typography>
-                <Typography>{event.place}</Typography>
+                <Typography sx={{ textAlign: { xs: 'left', sm: 'right' }, maxWidth: { xs: '100%', sm: '60%' }, wordBreak: 'break-word' }}>
+                  {event.place}
+                </Typography>
               </Box>
               
               <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
@@ -291,9 +293,11 @@ const BookingConfirmationPage = () => {
                   <Typography>Date & Time:</Typography>
                   <Typography>{event.date} • {event.time}</Typography>
                 </Box>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 1 }}>
                   <Typography>Location:</Typography>
-                  <Typography>{event.place}</Typography>
+                  <Typography sx={{ textAlign: { xs: 'left', sm: 'right' }, maxWidth: { xs: '100%', sm: '60%' }, wordBreak: 'break-word' }}>
+                    {event.place}
+                  </Typography>
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 1 }}>
                   <Typography>Attendee:</Typography>
